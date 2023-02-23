@@ -1,33 +1,31 @@
 <template>
-  <v-app-bar flat>
-    <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-    <v-app-bar-title>
-      <v-icon icon="mdi-bag-checked" />
-      おとしものアプリ(仮)
-    </v-app-bar-title>
-  </v-app-bar>
-  <v-navigation-drawer
-    v-model="drawer"
-    temporary
-  >
-      <v-list-item
-        prepend-avatar="https://randomuser.me/api/portraits/men/78.jpg"
-        title="John Leider"
-      ></v-list-item>
+    <v-toolbar color="transparent" class="px-0">
+      <v-toolbar-title>おとしものアプリ(仮)</v-toolbar-title>
 
-      <v-divider></v-divider>
+      <template v-slot:extension>
+        <v-tabs
+          v-model="tabs"
+          color="primary"
+          grow
+        >
+          <v-tab
+            :value="1"
+          >
+            拾ったものを登録
+          </v-tab>
 
-      <v-list density="compact" nav>
-        <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home"></v-list-item>
-        <v-list-item prepend-icon="mdi-forum" title="About" value="about"></v-list-item>
-      </v-list>
-    </v-navigation-drawer>
+          <v-tab
+            :value="2"
+          >
+            落とし物を探す
+          </v-tab>
+        </v-tabs>
+      </template>
+    </v-toolbar>
   </template>
   
   <script lang="ts" setup>
     import { ref } from "vue";
-
-    const drawer = ref(false);
-
+    const tabs = ref(1);
   </script>
   
