@@ -1,14 +1,22 @@
 <template>
-    <v-container class="fill-height">
-      <v-responsive class="d-flex align-center text-center fill-height">
-        <v-row justify="center">
-            <v-col cols="12">
-            <v-card>
-                <v-card-title>〇〇さん、みんなのカレンダーへようこそ！</v-card-title>
-                <v-card-subtitle>
-                <p>今日はどんな予定を立てますか？ 「所属ルーム」から、予定を調整したい団体を選んで、開始ボタンを押してください。</p>
-                </v-card-subtitle>
-            </v-card>
+    <v-container class="fill-height" fluid>
+      <v-responsive class="d-flex text-center align-center fill-height">
+        <v-row justify="center" align="center">
+            <v-col cols="auto">
+                <v-card border density="comfortable">
+                    <v-card-title class="ma-4">
+                        ようこそ
+                    </v-card-title>
+                    <v-card-text>
+                       「おとしものアプリ(仮)」は、警察に届けるまでもない落とし物を、
+                        撮影するだけで世界の人に共有できるツールです。
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn class="mx-auto" to="/add">拾ったものを登録</v-btn>
+                        <v-btn class="mx-auto" to="/find">落とし物を探す</v-btn>
+                    
+                    </v-card-actions>
+                </v-card>
             </v-col>
         </v-row>
       </v-responsive>
