@@ -4,15 +4,54 @@
     @zoom_changed="zoomChanged" @center_changed="centerChanged">
     <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
   </GoogleMap>
+  <v-navigation-drawer
+      v-model="drawer"
+      location="bottom"
+      temporary
+    >
+    
+    <v-card>
+      <v-card-item>
+        <div>
+          <div class="text-h6 mb-1">
+            <span v-for="(tag, i) in itemDetail.tags" :key="i">
+              # <a href="#" >{{ tag }}</a> 
+            </span>
+          </div>
+          <div class="text-caption">{{itemDetail.note}}</div>
+          <v-avatar
+                class="ma-3"
+                size="125"
+                rounded="0"
+              >
+            <v-img src="https://cdn.vuetifyjs.com/images/cards/foster.jpg"></v-img>
+          </v-avatar>
+        </div>
+      </v-card-item>
+
+      <v-card-actions>
+        <v-btn color="primary">
+          自分の落とし物です！
+        </v-btn>
+        <v-btn variant="text">
+          キャンセル
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-navigation-drawer>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, toRef } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref(null)
 
 const center = { lat: -28.024, lng: 140.887 }
+
+const drawer = ref(false)
+
+const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
 const locations = ref([
   { id: "hogehoge", lat: -31.56391, lng: 147.154312 },
@@ -56,6 +95,12 @@ const centerChanged = () => {
 
 const markerClicked = (id: string) => {
   console.log(`Marker: Cliked Id: ${id}`)
+
+  // bottom sheetの表示
+  drawer.value = true;
+
+  // descriptionの取得
+  const description = {tags: ["手袋", "赤"], note: "地面に落ちていました", date: "2023-02-26"}
 }
 
 </script>
