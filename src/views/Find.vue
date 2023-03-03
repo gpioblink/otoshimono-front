@@ -8,6 +8,7 @@
       v-model="drawer"
       location="bottom"
       temporary
+      style="height: 40%;"
     >
     
     <v-card>
