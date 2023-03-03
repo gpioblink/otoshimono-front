@@ -5,11 +5,10 @@
     <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
   </GoogleMap>
   <v-navigation-drawer
-      class="drawer-center"
       v-model="drawer"
       location="bottom"
       temporary
-      style="height: 40%; max-width: 600px; left: 50%; transform: translateX(-50%);"
+      :style="`height: 40%; max-width: 600px; left: ${drawerLeft};`"
     >
     
     <v-card height="100%" class="card-outter" style="position: relative">
@@ -71,6 +70,8 @@ import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
 
+const drawerLeft = ref<string>("0px")
+
 const center = { lat: -28.024, lng: 140.887 }
 
 const drawer = ref(false)
@@ -102,6 +103,20 @@ const locations = ref([
   { id: "hogehoge", lat: -42.735258, lng: 147.438 },
   { id: "hogehoge", lat: -43.999792, lng: 170.463352 },
 ])
+
+const windowSizeChanged = () => {
+  console.log(`windowWidth: ${window.innerWidth}`);
+  if(window.innerWidth < 600) {
+    drawerLeft.value = `0`;
+  } else {
+    drawerLeft.value = `${window.innerWidth / 2 - 300}px`;
+  }
+  console.log(`currentFix: ${drawerLeft.value}`);
+}
+
+onMounted(() => {
+  window.addEventListener('resize', windowSizeChanged)
+})
 
 const zoomChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
