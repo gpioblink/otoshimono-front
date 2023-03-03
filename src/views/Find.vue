@@ -8,7 +8,7 @@
       v-model="drawer"
       location="bottom"
       temporary
-      :style="`height: 40%; max-width: 600px; left: ${drawerLeft};`"
+      :style="`height: 40%; min-height: 400px; max-width: 600px; left: ${drawerLeft};`"
     >
     
     <v-card height="100%" class="card-outter" style="position: relative">
