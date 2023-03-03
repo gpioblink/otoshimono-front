@@ -45,7 +45,7 @@
 import { onMounted, ref, toRef } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
-const mapRef = ref(null)
+const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
 
 const center = { lat: -28.024, lng: 140.887 }
 
@@ -81,14 +81,14 @@ const locations = ref([
 
 const zoomChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
-  const gmap = mapRef.value.map;
+  const gmap = mapRef.value?.map;
   console.log(mapRef.value)
   console.log('Map: Zoom:', gmap.getZoom());
 }
 
 const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
-  const gmap = mapRef.value.map;
+  const gmap = mapRef.value?.map;
   const center = gmap.getCenter();
   console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
 }
