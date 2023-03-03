@@ -8,7 +8,7 @@
       v-model="drawer"
       location="bottom"
       temporary
-      :style="`height: 40%; min-height: 400px; max-width: 600px; left: ${drawerLeft};`"
+      :style="`height: 40%; min-height: 400px; max-height: 600px; max-width: 600px; left: ${drawerLeft};`"
     >
     
     <v-card height="100%" class="card-outter" style="position: relative">
@@ -24,17 +24,12 @@
             {{ tag }}
           </v-chip>
         </div>
-        <!-- <div class="text-h6 mb-1">
-          <span v-for="(tag, i) in itemDetail.tags" :key="i">
-            # <a href="#" >{{ tag }}</a> 
-          </span>
-        </div> -->
       </v-card-title>
       <v-card-item>
         <div>    
           <v-img
             height="200"
-            src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"
+            :src="itemDetail.pic"
             cover
             class="text-white"
           ></v-img>
@@ -42,7 +37,7 @@
       </v-card-item>
 
       <v-card-actions class="card-actions">
-        <v-btn color="primary">
+        <v-btn color="primary" @click="dialog = true">
           自分の落とし物です！
         </v-btn>
         <v-btn variant="text">
@@ -51,6 +46,58 @@
       </v-card-actions>
     </v-card>
   </v-navigation-drawer>
+
+  <v-row justify="center">
+    <v-dialog
+      v-model="dialog"
+      scrollable
+      width="100%"
+      style="max-width: 1000px;"
+    >
+      <v-card>
+        <v-card-title>最終確認</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+        <span>会津若松市一箕町亀賀郷之原</span>
+        <div class="text-caption">{{itemDetail.note}}</div>
+        <div>
+          <v-chip
+            v-for="(tag, i) in itemDetail.tags" :key="i"
+            class="ma-1"
+            label
+          >
+            <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
+            {{ tag }}
+          </v-chip>
+        </div>
+        <v-spacer class="mt-4"></v-spacer>
+        <v-img
+          :src="itemDetail.pic"
+          cover
+          class="text-white"
+        ></v-img>
+        </v-card-text>
+        <v-divider class="mt-2"></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="dialog = false"
+          >
+            キャンセル
+          </v-btn>
+          <v-btn
+            color="blue-darken-1"
+            variant="text"
+            @click="dialog = false"
+          >
+            発見済みにする
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
 </template>
 
 <style scoped>
@@ -71,6 +118,7 @@ import { GoogleMap, Marker } from "vue3-google-map";
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
 
 const drawerLeft = ref<string>("0px")
+const dialog = ref<boolean>(false)
 
 const center = { lat: -28.024, lng: 140.887 }
 
