@@ -5,32 +5,44 @@
     <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
   </GoogleMap>
   <v-navigation-drawer
+      class="drawer-center"
       v-model="drawer"
       location="bottom"
       temporary
-      style="height: 40%;"
+      style="height: 40%; max-width: 600px; left: 50%; transform: translateX(-50%);"
     >
     
-    <v-card>
-      <v-card-item>
+    <v-card height="100%" class="card-outter" style="position: relative">
+      <v-card-title>会津若松市一箕町亀賀郷之原
+        <div class="text-caption">{{itemDetail.note}}</div>
         <div>
-          <div class="text-h6 mb-1">
-            <span v-for="(tag, i) in itemDetail.tags" :key="i">
-              # <a href="#" >{{ tag }}</a> 
-            </span>
-          </div>
-          <div class="text-caption">{{itemDetail.note}}</div>
-          <v-avatar
-                class="ma-3"
-                size="125"
-                rounded="0"
-              >
-            <v-img src="https://cdn.vuetifyjs.com/images/cards/foster.jpg"></v-img>
-          </v-avatar>
+          <v-chip
+            v-for="(tag, i) in itemDetail.tags" :key="i"
+            class="ma-1"
+            label
+          >
+            <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
+            {{ tag }}
+          </v-chip>
+        </div>
+        <!-- <div class="text-h6 mb-1">
+          <span v-for="(tag, i) in itemDetail.tags" :key="i">
+            # <a href="#" >{{ tag }}</a> 
+          </span>
+        </div> -->
+      </v-card-title>
+      <v-card-item>
+        <div>    
+          <v-img
+            height="200"
+            src="https://cdn.pixabay.com/photo/2020/07/12/07/47/bee-5396362_1280.jpg"
+            cover
+            class="text-white"
+          ></v-img>
         </div>
       </v-card-item>
 
-      <v-card-actions>
+      <v-card-actions class="card-actions">
         <v-btn color="primary">
           自分の落とし物です！
         </v-btn>
@@ -41,6 +53,17 @@
     </v-card>
   </v-navigation-drawer>
 </template>
+
+<style scoped>
+.card-outter {
+  position: relative;
+  padding-bottom: 50px;
+}
+.card-actions {
+  position: absolute;
+  bottom: 0;
+}
+</style>
 
 <script lang="ts" setup>
 import { onMounted, ref, toRef } from "vue";
