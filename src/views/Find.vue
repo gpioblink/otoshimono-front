@@ -115,7 +115,8 @@ const windowSizeChanged = () => {
 }
 
 onMounted(() => {
-  window.addEventListener('resize', windowSizeChanged)
+  windowSizeChanged();
+  window.addEventListener('resize', windowSizeChanged);
 })
 
 const zoomChanged = () => {
