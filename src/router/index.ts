@@ -24,6 +24,11 @@ const routes = [
         name: 'Find',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Find.vue'),
       },
+      {
+        path: '/pickup',
+        name: 'Pickup',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/Pickup.vue'),
+      },
     ],
   },
 ]

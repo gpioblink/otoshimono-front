@@ -90,7 +90,7 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            @click="dialog = false"
+            to="/pickup"
           >
             発見済みにする
           </v-btn>
