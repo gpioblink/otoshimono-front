@@ -90,7 +90,7 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            to="/pickup"
+            to="/done/pickup"
           >
             発見済みにする
           </v-btn>

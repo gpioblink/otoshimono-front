@@ -4,18 +4,17 @@
 
       <template v-slot:extension>
         <v-tabs
-          v-model="tabs"
           color="primary"
           grow
         >
           <v-tab
-            :value="1"
+            to="/add"
           >
             拾ったものを登録
           </v-tab>
 
           <v-tab
-            :value="2"
+            to="/find"
           >
             落とし物を探す
           </v-tab>
@@ -26,6 +25,5 @@
   
   <script lang="ts" setup>
     import { ref } from "vue";
-    const tabs = ref(1);
   </script>
   
