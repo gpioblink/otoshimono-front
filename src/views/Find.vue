@@ -7,7 +7,7 @@
   <v-navigation-drawer
       v-model="drawer"
       location="bottom"
-      :touchless="drawer"
+      :touchless="!drawer"
       temporary
       :style="`height: 40%; min-height: 400px; max-height: 600px; max-width: 600px; left: ${drawerLeft};`"
     >
