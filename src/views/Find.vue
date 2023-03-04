@@ -8,7 +8,7 @@
   </GoogleMap>
 
   <v-text-field
-        style="top:125px; right: 10px; position: fixed; max-width: 600px; width: 70%;"
+        style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 70%;"
         variant="solo"
         label="フィルターを入力"
         append-inner-icon="mdi-magnify"
