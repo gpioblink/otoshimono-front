@@ -240,7 +240,7 @@ const unforcus = () => {
     // @ts-ignore
     textBox.value.blur()
   }
-  },1000 )
+  },100 )
 }
 
 const centerChanged = () => {
