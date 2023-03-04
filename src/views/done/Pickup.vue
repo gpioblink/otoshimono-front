@@ -27,7 +27,7 @@
                             <v-spacer class="mt-4"></v-spacer>
 
                             <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
-                                style="width: 100%; height: 500px;" :center="center" :zoom="15" :fullscreen-control="false">
+                                style="width: 100%; height: 300px;" :center="center" :zoom="15" :fullscreen-control="false">
                                 <Marker :options="{ position: center }" />
                             </GoogleMap>
 
