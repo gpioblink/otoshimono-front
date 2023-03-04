@@ -4,7 +4,7 @@
     @zoom_changed="zoomChanged" @center_changed="centerChanged">
 
     <v-text-field
-        style="top:125px; right: 1%; position: fixed; max-width: 600px; width: 90%;"
+        style="top:125px; right: 1%; position: fixed; max-width: 600px; width: 70%;"
         variant="solo"
         label="フィルターを入力"
         append-inner-icon="mdi-magnify"
