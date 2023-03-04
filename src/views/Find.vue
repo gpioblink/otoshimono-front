@@ -1,11 +1,10 @@
 <template>
   <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
-    style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false"
+    style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false" :map-type-control="showMapTypeControl"
     @zoom_changed="zoomChanged" @center_changed="centerChanged">
 
     <v-text-field
-        style="top:125px; right: 20px; position: fixed; width: 40%;"
-        density="compact"
+        style="top:125px; right: 1%; position: fixed; max-width: 600px; width: 90%;"
         variant="solo"
         label="フィルターを入力"
         append-inner-icon="mdi-magnify"
@@ -138,6 +137,8 @@ const center = { lat: 35.6809591, lng: 139.7673068 }
 
 const drawer = ref(false)
 
+const showMapTypeControl = ref(false)
+
 const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
 const locations = ref([
@@ -168,12 +169,8 @@ const locations = ref([
 
 const windowSizeChanged = () => {
   console.log(`windowWidth: ${window.innerWidth}`);
-  if(window.innerWidth < 600) {
-    drawerLeft.value = `0`;
-  } else {
-    drawerLeft.value = `${window.innerWidth / 2 - 300}px`;
-  }
-  console.log(`currentFix: ${drawerLeft.value}`);
+  drawerLeft.value = (window.innerWidth < 600) ? `0` : `${window.innerWidth / 2 - 300}px`;
+  showMapTypeControl.value = (window.innerWidth > 850)
 }
 
 onMounted(() => {
