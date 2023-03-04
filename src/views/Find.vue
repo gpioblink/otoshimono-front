@@ -14,8 +14,7 @@
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
-        @click.stop
-        @keyup.prevent
+        @click:append-inner="unforcus()"
     ></v-text-field>
 
   <v-navigation-drawer
@@ -225,20 +224,23 @@ watch(() => mapRef.value?.ready, (ready) => {
 const zoomChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
+  unforcus()
   console.log(mapRef.value)
   console.log('Map: Zoom:', gmap?.getZoom());
+}
 
-  // @ts-ignore
-  mapRef.value?.focus()
+const unforcus = () => {
+  const elem = document.activeElement;
+  if(elem) {
+    elem.blur()
+  }
 }
 
 const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
   const center = gmap?.getCenter();
-
-  // @ts-ignore
-  mapRef.value?.focus()
+  unforcus()
   if(center) {
     console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
   }
