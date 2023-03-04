@@ -232,6 +232,7 @@ const zoomChanged = () => {
 const unforcus = () => {
   const elem = document.activeElement;
   if(elem) {
+    // @ts-ignore
     elem.blur()
   }
 }
