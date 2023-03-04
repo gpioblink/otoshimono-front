@@ -17,7 +17,13 @@ export default defineConfig({
     vuetify({
       autoImport: true,
     }),
-    VitePWA({ registerType: 'autoUpdate' }),
+    VitePWA({ 
+      registerType: 'autoUpdate', 
+      injectRegister: 'auto',
+      devOptions: {
+        enabled: true
+      }
+   }),
   ],
   define: { 'process.env': {} },
   resolve: {
