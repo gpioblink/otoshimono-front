@@ -5,7 +5,7 @@
                 <v-col cols="auto">
                     <v-card border density="comfortable">
                         <v-card-title class="ma-4">
-                            見つかってよかったですね！！🎉🎉
+                            よかったですね！！🎉🎉
                         </v-card-title>
                         <v-card-text>
                             <p>発見したものをリストから削除しました。
