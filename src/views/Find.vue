@@ -1,12 +1,27 @@
 <template>
   <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
-    style="width: 100%; height: 100%" :center="center" :zoom="15"
-    @zoom_changed="zoomChanged" @center_changed="centerChanged">
+    style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false" :map-type-control="showMapTypeControl"
+    @zoom_changed="zoomChanged" @center_changed="centerChanged" @click="unforcus()">
+
     <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
+
   </GoogleMap>
+
+  <v-text-field
+        ref="textBox"
+        style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 70%;"
+        variant="solo"
+        label="フィルターを入力"
+        append-inner-icon="mdi-magnify"
+        single-line
+        hide-details
+        @click:append-inner="lazyUnforcus()"
+    ></v-text-field>
+
   <v-navigation-drawer
       v-model="drawer"
       location="bottom"
+      :touchless="!drawer"
       temporary
       :style="`height: 40%; min-height: 400px; max-height: 600px; max-width: 600px; left: ${drawerLeft};`"
     >
@@ -112,17 +127,20 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, ref, toRef } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
+const textBox = ref(null)
 
 const drawerLeft = ref<string>("0px")
 const dialog = ref<boolean>(false)
 
-const center = { lat: -28.024, lng: 140.887 }
+const center = { lat: 35.6809591, lng: 139.7673068 }
 
 const drawer = ref(false)
+
+const showMapTypeControl = ref(false)
 
 const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
@@ -154,31 +172,90 @@ const locations = ref([
 
 const windowSizeChanged = () => {
   console.log(`windowWidth: ${window.innerWidth}`);
-  if(window.innerWidth < 600) {
-    drawerLeft.value = `0`;
-  } else {
-    drawerLeft.value = `${window.innerWidth / 2 - 300}px`;
-  }
-  console.log(`currentFix: ${drawerLeft.value}`);
+  drawerLeft.value = (window.innerWidth < 600) ? `0` : `${window.innerWidth / 2 - 300}px`;
+  showMapTypeControl.value = (window.innerWidth > 850)
 }
 
 onMounted(() => {
   windowSizeChanged();
   window.addEventListener('resize', windowSizeChanged);
+  moveToCurrentPosition();
+})
+
+const moveToCurrentPosition = () => {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition( (pos) => {
+      console.log(`geolocation: ${pos.coords.latitude},${pos.coords.longitude}`)
+      const gmap = mapRef.value?.map
+      const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+      gmap?.setCenter(position)
+    })
+  }
+}
+
+const addCurrentLocationMarker = () => {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition( (pos) => {
+      console.log(`geolocation: ${pos.coords.latitude},${pos.coords.longitude}`)
+      const gmap = mapRef.value?.map
+      const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+
+      // 現在地に青点を追加
+      new google.maps.Marker({
+        position: position,
+        map: gmap,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillOpacity: 1,
+          strokeWeight: 2,
+          fillColor: '#5384ED',
+          strokeColor: '#ffffff',
+        },
+      });
+    })
+  }
+}
+
+watch(() => mapRef.value?.ready, (ready) => {
+  if (!ready) return
+  moveToCurrentPosition()
+  addCurrentLocationMarker()
 })
 
 const zoomChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
+
+  // FIXME: 検索窓のフォーカス外し用
+  unforcus()
+  
   console.log(mapRef.value)
-  console.log('Map: Zoom:', gmap.getZoom());
+  console.log('Map: Zoom:', gmap?.getZoom());
+}
+
+const lazyUnforcus = () => {
+  setTimeout(() => { unforcus() }, 100 )
+}
+
+const unforcus = () => {
+  if(textBox.value) {
+    // @ts-ignore
+    textBox.value.blur()
+  }
 }
 
 const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
-  const center = gmap.getCenter();
-  console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
+  const center = gmap?.getCenter();
+
+  // FIXME: 検索窓のフォーカス外し用
+  unforcus()
+
+  if(center) {
+    console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
+  }
 }
 
 const markerClicked = (id: string) => {

@@ -5,7 +5,7 @@
                 <v-col cols="auto">
                     <v-card border density="comfortable">
                         <v-card-title class="ma-4">
-                            見つかってよかったですね！！🎉🎉
+                            よかったですね！！🎉🎉
                         </v-card-title>
                         <v-card-text>
                             <p>発見したものをリストから削除しました。
@@ -23,13 +23,20 @@
                                 {{ tag }}
                             </v-chip>
                             </div>
+
+                            <v-spacer class="mt-4"></v-spacer>
+
+                            <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
+                                style="width: 100%; height: 300px;" :center="center" :zoom="15" :fullscreen-control="false">
+                                <Marker :options="{ position: center }" />
+                            </GoogleMap>
+
                             <v-spacer class="mt-4"></v-spacer>
                             <v-img
                             :src="itemDetail.pic"
                             cover
                             class="text-white"
                             ></v-img>
-
                         </v-card-text>
                         <v-card-actions>
                             <v-btn class="mx-auto" to="/">TOPに戻る</v-btn>
@@ -43,8 +50,10 @@
 
 <script lang="ts" setup>
 import { ref } from "vue";
+import { GoogleMap, Marker } from "vue3-google-map";
 
+const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
 const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
-
+const center = { lat: 35.6809591, lng: 139.7673068 }
 </script>
   
