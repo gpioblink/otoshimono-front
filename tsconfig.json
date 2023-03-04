@@ -19,7 +19,7 @@
       ]
      },
     "types": [
-      "node", "vite-plugin-pwa/client"
+      "node", "vite-plugin-pwa/client", "@types/googlemaps"
     ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],

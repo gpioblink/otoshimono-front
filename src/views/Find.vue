@@ -112,7 +112,7 @@
 </style>
 
 <script lang="ts" setup>
-import { onMounted, ref, toRef } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
@@ -120,7 +120,7 @@ const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
 const drawerLeft = ref<string>("0px")
 const dialog = ref<boolean>(false)
 
-const center = { lat: -28.024, lng: 140.887 }
+const center = { lat: 35.6809591, lng: 139.7673068 }
 
 const drawer = ref(false)
 
@@ -165,20 +165,38 @@ const windowSizeChanged = () => {
 onMounted(() => {
   windowSizeChanged();
   window.addEventListener('resize', windowSizeChanged);
+  moveToCurrentPosition();
+})
+
+const moveToCurrentPosition = () => {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition( (pos) => {
+      console.log(`geolocation: ${pos.coords.latitude},${pos.coords.longitude}`)
+      const gmap = mapRef.value?.map
+      gmap?.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude))
+    })
+  }
+}
+
+watch(() => mapRef.value?.ready, (ready) => {
+  if (!ready) return
+  moveToCurrentPosition()
 })
 
 const zoomChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
   console.log(mapRef.value)
-  console.log('Map: Zoom:', gmap.getZoom());
+  console.log('Map: Zoom:', gmap?.getZoom());
 }
 
 const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
-  const center = gmap.getCenter();
-  console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
+  const center = gmap?.getCenter();
+  if(center) {
+    console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
+  }
 }
 
 const markerClicked = (id: string) => {
