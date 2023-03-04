@@ -3,19 +3,18 @@
     style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false" :map-type-control="showMapTypeControl"
     @zoom_changed="zoomChanged" @center_changed="centerChanged">
 
-    <v-text-field
+    <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
+
+  </GoogleMap>
+
+  <v-text-field
         style="top:125px; right: 10px; position: fixed; max-width: 600px; width: 70%;"
         variant="solo"
         label="フィルターを入力"
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
-        @click:append-inner=""
     ></v-text-field>
-
-    <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
-
-  </GoogleMap>
 
   <v-navigation-drawer
       v-model="drawer"
