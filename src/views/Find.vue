@@ -8,6 +8,7 @@
   </GoogleMap>
 
   <v-text-field
+        ref="textBox"
         style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 70%;"
         variant="solo"
         label="フィルターを入力"
@@ -130,6 +131,7 @@ import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
+const textBox = ref(null)
 
 const drawerLeft = ref<string>("0px")
 const dialog = ref<boolean>(false)
@@ -224,18 +226,18 @@ watch(() => mapRef.value?.ready, (ready) => {
 const zoomChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
+
+  // FIXME: 検索窓のフォーカス外し用
   unforcus()
+  
   console.log(mapRef.value)
   console.log('Map: Zoom:', gmap?.getZoom());
 }
 
 const unforcus = () => {
-  for(let i=0; i < 2; i++) {
-    const elem = document.activeElement;
-    if(elem) {
-      // @ts-ignore
-      elem.blur()
-    }
+  if(textBox.value) {
+    // @ts-ignore
+    textBox.value.blur()
   }
 }
 
@@ -243,7 +245,10 @@ const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
   const center = gmap?.getCenter();
+
+  // FIXME: 検索窓のフォーカス外し用
   unforcus()
+
   if(center) {
     console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
   }
