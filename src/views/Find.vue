@@ -2,8 +2,21 @@
   <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
     style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false"
     @zoom_changed="zoomChanged" @center_changed="centerChanged">
+
+    <v-text-field
+        style="top:125px; right: 20px; position: fixed; width: 40%;"
+        density="compact"
+        variant="solo"
+        label="フィルターを入力"
+        append-inner-icon="mdi-magnify"
+        single-line
+        hide-details
+    ></v-text-field>
+
     <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
+
   </GoogleMap>
+
   <v-navigation-drawer
       v-model="drawer"
       location="bottom"
