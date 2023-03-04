@@ -235,10 +235,12 @@ const zoomChanged = () => {
 }
 
 const unforcus = () => {
-  if(textBox.value) {
+  setTimeout(() => {
+    if(textBox.value) {
     // @ts-ignore
     textBox.value.blur()
   }
+  },1000 )
 }
 
 const centerChanged = () => {
