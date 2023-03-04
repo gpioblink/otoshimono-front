@@ -14,6 +14,8 @@
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
+        @click.stop
+        @keyup.prevent
     ></v-text-field>
 
   <v-navigation-drawer
