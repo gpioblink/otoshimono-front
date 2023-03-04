@@ -230,10 +230,12 @@ const zoomChanged = () => {
 }
 
 const unforcus = () => {
-  const elem = document.activeElement;
-  if(elem) {
-    // @ts-ignore
-    elem.blur()
+  for(let i=0; i > 2; i++) {
+    const elem = document.activeElement;
+    if(elem) {
+      // @ts-ignore
+      elem.blur()
+    }
   }
 }
 
