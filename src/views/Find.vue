@@ -175,8 +175,18 @@ const moveToCurrentPosition = () => {
       const gmap = mapRef.value?.map
       const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
       gmap?.setCenter(position)
+    })
+  }
+}
 
-        // 現在地に青点を追加
+const addCurrentLocationMarker = () => {
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition( (pos) => {
+      console.log(`geolocation: ${pos.coords.latitude},${pos.coords.longitude}`)
+      const gmap = mapRef.value?.map
+      const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+
+      // 現在地に青点を追加
       new google.maps.Marker({
         position: position,
         map: gmap,
@@ -196,6 +206,7 @@ const moveToCurrentPosition = () => {
 watch(() => mapRef.value?.ready, (ready) => {
   if (!ready) return
   moveToCurrentPosition()
+  addCurrentLocationMarker()
 })
 
 const zoomChanged = () => {
