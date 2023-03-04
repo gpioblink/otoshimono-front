@@ -1,7 +1,7 @@
 <template>
   <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
     style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false" :map-type-control="showMapTypeControl"
-    @zoom_changed="zoomChanged" @center_changed="centerChanged">
+    @zoom_changed="zoomChanged" @center_changed="centerChanged" @click="unforcus()">
 
     <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
 
@@ -235,12 +235,7 @@ const zoomChanged = () => {
 }
 
 const lazyUnforcus = () => {
-  setTimeout(() => {
-    if(textBox.value) {
-    // @ts-ignore
-    textBox.value.blur()
-  }
-  },100 )
+  setTimeout(() => { unforcus() }, 100 )
 }
 
 const unforcus = () => {
