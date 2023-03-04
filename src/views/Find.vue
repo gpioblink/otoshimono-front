@@ -230,7 +230,7 @@ const zoomChanged = () => {
 }
 
 const unforcus = () => {
-  for(let i=0; i > 2; i++) {
+  for(let i=0; i < 2; i++) {
     const elem = document.activeElement;
     if(elem) {
       // @ts-ignore
