@@ -19,7 +19,7 @@
       ]
      },
     "types": [
-      "vite-plugin-pwa/client"
+      "node", "vite-plugin-pwa/client"
     ]
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
