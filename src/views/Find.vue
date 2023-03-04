@@ -173,7 +173,22 @@ const moveToCurrentPosition = () => {
     navigator.geolocation.getCurrentPosition( (pos) => {
       console.log(`geolocation: ${pos.coords.latitude},${pos.coords.longitude}`)
       const gmap = mapRef.value?.map
-      gmap?.setCenter(new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude))
+      const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+      gmap?.setCenter(position)
+
+        // 現在地に青点を追加
+      new google.maps.Marker({
+        position: position,
+        map: gmap,
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 10,
+          fillOpacity: 1,
+          strokeWeight: 2,
+          fillColor: '#5384ED',
+          strokeColor: '#ffffff',
+        },
+      });
     })
   }
 }
