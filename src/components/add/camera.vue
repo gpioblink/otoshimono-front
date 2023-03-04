@@ -14,7 +14,7 @@
             </v-btn>
         </v-row>
     </Camera>
-    <cameraConfirm :dialog="confirmDialog" :camera-size="reversedCameraSize" :url="url"/>  
+    <cameraConfirm :dialog="confirmDialog" :camera-size="reversedCameraSize" :url="<string>url"/>  
   </v-container>
 </template>
 
@@ -75,7 +75,7 @@ const camera = ref<InstanceType<typeof Camera>>();
 const snapshot = async () => {
   btnLoading.value = true;
     const blob = await camera.value?.snapshot(reversedCameraSize);
-  url.value = URL.createObjectURL(blob);
+  url.value = URL.createObjectURL(<Blob>blob);
   console.log(url);
   confirmDialog.value = true;
   btnLoading.value = false;
