@@ -227,12 +227,18 @@ const zoomChanged = () => {
   const gmap = mapRef.value?.map;
   console.log(mapRef.value)
   console.log('Map: Zoom:', gmap?.getZoom());
+
+  // @ts-ignore
+  mapRef.value?.focus()
 }
 
 const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
   const gmap = mapRef.value?.map;
   const center = gmap?.getCenter();
+
+  // @ts-ignore
+  mapRef.value?.focus()
   if(center) {
     console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
   }
