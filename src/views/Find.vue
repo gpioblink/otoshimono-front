@@ -15,7 +15,7 @@
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
-        @click:append-inner="unforcus()"
+        @click:append-inner="lazyUnforcus()"
     ></v-text-field>
 
   <v-navigation-drawer
@@ -234,13 +234,20 @@ const zoomChanged = () => {
   console.log('Map: Zoom:', gmap?.getZoom());
 }
 
-const unforcus = () => {
+const lazyUnforcus = () => {
   setTimeout(() => {
     if(textBox.value) {
     // @ts-ignore
     textBox.value.blur()
   }
   },100 )
+}
+
+const unforcus = () => {
+  if(textBox.value) {
+    // @ts-ignore
+    textBox.value.blur()
+  }
 }
 
 const centerChanged = () => {
