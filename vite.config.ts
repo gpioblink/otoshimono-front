@@ -25,8 +25,8 @@ export default defineConfig({
       },
       manifest: {
         lang: 'ja',
-        name: 'QR Reader',
-        short_name: 'QR',
+        name: 'Find my Otoshimono',
+        short_name: 'Otoshimono',
         background_color: '#fff',
         theme_color: '#3cb371',
         display: 'standalone',
