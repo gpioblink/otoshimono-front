@@ -42,20 +42,22 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, reactive, toRefs, watch } from "vue";
+import { GoogleMap, Marker } from "vue3-google-map";
 
-interface Data{
-  note: string;
+interface ResponseData {
+  id: number,
+  pic: string,
   date: string,
+  note: string,
   tags: string[],
   location: {
     lat: number,
-    lng: number
-  };
-  pic: string;
+    lng: number,
+  }
 }
 interface Props {
   dialog: boolean,
-  data: Data
+  data: ResponseData
 }
 const props = defineProps<Props>()
 const dialog3 = ref(false)
