@@ -2,9 +2,6 @@
   <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
     style="width: 100%; height: 100%" :center="center" :zoom="15" :fullscreen-control="false" :map-type-control="showMapTypeControl"
     @zoom_changed="zoomChanged" @center_changed="centerChanged" @click="unforcus()">
-
-    <Marker v-for="(location, i) in locations" :options="{ position: location }" :key="i" @click="markerClicked(location.id)" />
-
   </GoogleMap>
 
   <v-text-field
@@ -130,6 +127,24 @@
 import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
+interface ResultMarker {
+  id: number
+  tags: string[]
+  note: string
+  pic: string
+  location: { lat: number, lng: number }
+  date: string
+}
+
+interface OtoshimonoMarker {
+  tags: string[]
+  note: string
+  pic: string
+  location: { lat: number, lng: number }
+  date: string 
+  marker: google.maps.Marker
+}
+
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
 const textBox = ref(null)
 
@@ -144,31 +159,10 @@ const showMapTypeControl = ref(false)
 
 const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
-const locations = ref([
-  { id: "hogehoge", lat: -31.56391, lng: 147.154312 },
-  { id: "hogehoge", lat: -33.718234, lng: 150.363181 },
-  { id: "hogehoge", lat: -33.727111, lng: 150.371124 },
-  { id: "hogehoge", lat: -33.848588, lng: 151.209834 },
-  { id: "hogehoge", lat: -33.851702, lng: 151.216968 },
-  { id: "hogehoge", lat: -34.671264, lng: 150.863657 },
-  { id: "hogehoge", lat: -35.304724, lng: 148.662905 },
-  { id: "hogehoge", lat: -36.817685, lng: 175.699196 },
-  { id: "hogehoge", lat: -36.828611, lng: 175.790222 },
-  { id: "hogehoge", lat: -37.75, lng: 145.116667 },
-  { id: "hogehoge", lat: -37.759859, lng: 145.128708 },
-  { id: "hogehoge", lat: -37.765015, lng: 145.133858 },
-  { id: "hogehoge", lat: -37.770104, lng: 145.143299 },
-  { id: "hogehoge", lat: -37.7737, lng: 145.145187 },
-  { id: "hogehoge", lat: -37.774785, lng: 145.137978 },
-  { id: "hogehoge", lat: -37.819616, lng: 144.968119 },
-  { id: "hogehoge", lat: -38.330766, lng: 144.695692 },
-  { id: "hogehoge", lat: -39.927193, lng: 175.053218 },
-  { id: "hogehoge", lat: -41.330162, lng: 174.865694 },
-  { id: "hogehoge", lat: -42.734358, lng: 147.439506 },
-  { id: "hogehoge", lat: -42.734358, lng: 147.501315 },
-  { id: "hogehoge", lat: -42.735258, lng: 147.438 },
-  { id: "hogehoge", lat: -43.999792, lng: 170.463352 },
-])
+const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
+
+// const currentLocationMarker: google.maps.Marker | null = null
+const resultMarkers: { [id :string]: OtoshimonoMarker } = {} 
 
 const windowSizeChanged = () => {
   console.log(`windowWidth: ${window.innerWidth}`);
@@ -200,7 +194,6 @@ const addCurrentLocationMarker = () => {
       const gmap = mapRef.value?.map
       const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
 
-      // 現在地に青点を追加
       new google.maps.Marker({
         position: position,
         map: gmap,
@@ -217,10 +210,69 @@ const addCurrentLocationMarker = () => {
   }
 }
 
+const showCurrentLocationMarkers = async () => {
+  const resRaw = await fetch(`${backendBaseURL}/search`, {
+    method: "POST",
+    body: JSON.stringify({
+      "location1": {
+          "lat": 37.576838,
+          "lng": 139.790957
+      },
+      "location2": {
+          "lat": 37.431698,
+          "lng": 140.038459
+      },
+      "tags": [
+          "手袋"
+      ],
+      "query": "地球"
+    })
+  })
+  
+  const gmap = mapRef.value?.map
+  const res: {count: number, items: ResultMarker[]} = await resRaw.json()
+
+  for(let i = 0; i < res.count; i++) {
+    const item = res.items[i]
+    if(item.id in resultMarkers) {
+      continue
+    }
+
+    // 取得してきたマーカーをGoogleMap用のマーカーにする
+    const marker = new google.maps.Marker({
+        title: item.id.toString(),
+        position: new google.maps.LatLng(item.location.lat, item.location.lng),
+        map: gmap,
+    });
+
+    marker.addListener("click", (data) => {
+      const markerId = marker.getTitle()
+      if (typeof markerId == "string") {
+        markerClicked( markerId )
+      }
+    });
+
+    // 詳細情報保存用の配列に詰める
+    resultMarkers[item.id] = {
+      tags: item.tags,
+      note: item.note,
+      pic: item.pic,
+      location: { lat: item.location.lat, lng: item.location.lng },
+      date: item.date,
+      marker: marker
+    }
+
+  }
+}
+
+
+
 watch(() => mapRef.value?.ready, (ready) => {
   if (!ready) return
   moveToCurrentPosition()
   addCurrentLocationMarker()
+
+  showCurrentLocationMarkers()
 })
 
 const zoomChanged = () => {
@@ -261,11 +313,13 @@ const centerChanged = () => {
 const markerClicked = (id: string) => {
   console.log(`Marker: Cliked Id: ${id}`)
 
+  const item = resultMarkers[id]
+
+  // descriptionの更新
+  itemDetail.value = {tags: item.tags, note: item.note, date: item.date, pic: item.pic}
+
   // bottom sheetの表示
   drawer.value = true;
-
-  // descriptionの取得
-  const description = {tags: ["手袋", "赤"], note: "地面に落ちていました", date: "2023-02-26"}
 }
 
 </script>
