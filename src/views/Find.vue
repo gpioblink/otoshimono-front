@@ -124,7 +124,6 @@
 </style>
 
 <script lang="ts" setup>
-import router from "@/router";
 import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
@@ -195,6 +194,7 @@ const addCurrentLocationMarker = () => {
       const gmap = mapRef.value?.map
       const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
 
+      // 現在地に青点を追加
       new google.maps.Marker({
         position: position,
         map: gmap,
