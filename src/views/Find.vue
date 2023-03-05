@@ -24,7 +24,7 @@
     >
     
     <v-card height="100%" class="card-outter" style="position: relative">
-      <v-card-title>会津若松市一箕町亀賀郷之原
+      <v-card-title>{{ itemDetail.title }}
         <div class="text-caption">{{itemDetail.note}}</div>
         <div>
           <v-chip
@@ -70,7 +70,7 @@
         <v-card-title>最終確認</v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-        <span>会津若松市一箕町亀賀郷之原</span>
+        <span>{{ itemDetail.title }}</span>
         <div class="text-caption">{{itemDetail.note}}</div>
         <div>
           <v-chip
@@ -157,7 +157,7 @@ const drawer = ref(false)
 
 const showMapTypeControl = ref(false)
 
-const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
+const itemDetail = ref({title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
 const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
 
@@ -317,17 +317,25 @@ const centerChanged = () => {
 }
 
 const markerClicked = (id: string) => {
-  const gmap = mapRef.value?.map;
-
   console.log(`Marker: Cliked Id: ${id}`)
-
   const item = resultMarkers[id]
 
-  // 一旦descriptionの更新
-  itemDetail.value = {tags: item.tags, note: item.note, date: item.date, pic: item.pic}
+  // descriptionの更新
+  itemDetail.value = {title: "", tags: item.tags, note: item.note, date: item.date, pic: item.pic}
 
   // bottom sheetの表示
   drawer.value = true;
+
+  // タイトル状態だけど
+  const geocoder = new google.maps.Geocoder()
+  geocoder.geocode({ location: new google.maps.LatLng(item.location.lat, item.location.lng) }, 
+    (results, status) => {
+      if (status != google.maps.GeocoderStatus.OK) return
+      if (results[0].geometry) {
+        console.log(results[0].formatted_address)
+        itemDetail.value.title = results[0].formatted_address
+      }
+  })
 }
 
 </script>
