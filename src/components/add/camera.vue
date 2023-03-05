@@ -116,18 +116,10 @@ const image = reactive<Image>({
 const snapshot = async () => {
   btnDisabled.value = true;
     const blob = await camera.value?.snapshot(reversedCameraSize);
-  image.url = URL.createObjectURL(<Blob>blob);
-  console.log(image.url);
+    image.url = URL.createObjectURL(<Blob>blob);
+    image.blob = <Blob>blob;
   confirmDialog.value = true;
   btnDisabled.value = false;
-    /*
-    const link = document.createElement('a');
-    link.download = 'aaa.png'
-    link.href = url; 
-    link.click(); 
-    URL.revokeObjectURL(link.href);
-
-    */
 }
 </script>
   

@@ -62,9 +62,20 @@ const pic = ref<string>("")
 const upload = async () => {
   uploadLoading.value = true
   // ここで画像をアップロードする
-  await new Promise((resolve) => setTimeout(resolve, 1500))
-  tags.value = ["タグ1", "タグ2", "タグ3"];
-  pic.value = "https://picsum.photos/200/300";
+  const formData = new FormData();
+  formData.append("file", <Blob>props.image.blob, "image.png");
+  const response = await fetch(`${import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL}/parse`, {
+      method: "POST",
+    body: formData,
+      mode: "cors",
+  }).catch((e) => {
+      alert("通信エラーが発生しました。");
+      console.log(e);
+  });
+  const data = await response?.json();
+  console.log(data)
+  tags.value = data.tags;
+  pic.value = data.pic;
   dialog2.value = true
   dialog.value = false
   uploadLoading.value = false

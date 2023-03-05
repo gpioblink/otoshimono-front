@@ -111,7 +111,7 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <thanksDialog :dialog="dialog3" :data="data"/>
+  <thanksDialog :dialog="dialog3" :data="responseData"/>
 </template>
 
 
@@ -120,7 +120,6 @@ import { ref, onMounted, reactive, toRefs, watch } from "vue";
 import dayjs from "dayjs";
 import { GoogleMap, Marker } from "vue3-google-map";
 import thanksDialog from "./thanksDialog.vue";
-import { strict } from "assert";
 
 interface Props {
   dialog: boolean,
@@ -224,14 +223,35 @@ const validate = () => {
   }
   return true
 }
+interface ResponseData {
+  id: number,
+  pic: string,
+  date: string,
+  note: string,
+  tags: string[],
+  location: {
+    lat: number,
+    lng: number,
+  }
+}
+let responseData = reactive(<ResponseData>{})
 
 const register = async () => {
   if (!validate()) return
   registerLoading.value = true
   data.date = dayjs(data.date).toISOString()
   console.log(JSON.stringify(data))
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  data.pic = "https://picsum.photos/200/300"
+  const response = await fetch(`${import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL}/item`, {
+      method: "POST",
+    body: JSON.stringify(data),
+      mode: "cors",
+  }).catch((e) => {
+    alert.type = "error"
+    alert.title = "登録に失敗しました。"
+    alert.text = "登録に失敗しました。再読込して登録を行ってください。"
+      console.log(e);
+  });
+  responseData = await response?.json()
   registerLoading.value = false
   dialog2.value = false
   dialog3.value = true
@@ -255,6 +275,10 @@ const data = reactive({
 
 watch(data, (val) => {
   console.log(val)
+})
+
+watch(props, (val) => {
+  data.pic = val.pic
 })
 
 const moveToTop = () => {
