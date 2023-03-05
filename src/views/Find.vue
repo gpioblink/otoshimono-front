@@ -211,25 +211,32 @@ const addCurrentLocationMarker = () => {
 }
 
 const showCurrentLocationMarkers = async () => {
+  const gmap = mapRef.value?.map
+  if(!mapRef.value) return
+
+  // google mapの表示領域を取得する
+  const bounds = gmap?.getBounds()
+
+  console.log(bounds?.getSouthWest().lat())
+
   const resRaw = await fetch(`${backendBaseURL}/search`, {
     method: "POST",
     body: JSON.stringify({
       "location1": {
-          "lat": 37.576838,
-          "lng": 139.790957
+          "lat": bounds?.getSouthWest().lat(),
+          "lng": bounds?.getSouthWest().lng()
       },
       "location2": {
-          "lat": 37.431698,
-          "lng": 140.038459
+          "lat": bounds?.getNorthEast().lat(),
+          "lng": bounds?.getNorthEast().lng()
       },
-      "tags": [
-          "手袋"
-      ],
-      "query": "地球"
+      // "tags": [
+      //     "手袋"
+      // ],
+      // "query": "地球"
     })
   })
   
-  const gmap = mapRef.value?.map
   const res: {count: number, items: ResultMarker[]} = await resRaw.json()
 
   for(let i = 0; i < res.count; i++) {
@@ -265,8 +272,6 @@ const showCurrentLocationMarkers = async () => {
   }
 }
 
-
-
 watch(() => mapRef.value?.ready, (ready) => {
   if (!ready) return
   moveToCurrentPosition()
@@ -282,8 +287,8 @@ const zoomChanged = () => {
   // FIXME: 検索窓のフォーカス外し用
   unforcus()
   
-  console.log(mapRef.value)
-  console.log('Map: Zoom:', gmap?.getZoom());
+  // console.log('Map: Zoom:', gmap?.getZoom());
+  showCurrentLocationMarkers()
 }
 
 const lazyUnforcus = () => {
@@ -307,15 +312,18 @@ const centerChanged = () => {
 
   if(center) {
     console.log('Map: Center: (', center.lat(), ',', center.lng(), ')');
+    showCurrentLocationMarkers();
   }
 }
 
 const markerClicked = (id: string) => {
+  const gmap = mapRef.value?.map;
+
   console.log(`Marker: Cliked Id: ${id}`)
 
   const item = resultMarkers[id]
 
-  // descriptionの更新
+  // 一旦descriptionの更新
   itemDetail.value = {tags: item.tags, note: item.note, date: item.date, pic: item.pic}
 
   // bottom sheetの表示
