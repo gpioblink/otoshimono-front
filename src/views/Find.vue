@@ -52,7 +52,7 @@
         <v-btn color="primary" @click="dialog = true">
           自分の落とし物です！
         </v-btn>
-        <v-btn variant="text">
+        <v-btn variant="text" @click="drawer = false">
           キャンセル
         </v-btn>
       </v-card-actions>
@@ -102,7 +102,7 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            to="/done/pickup"
+            :to="`/done/pickup/${itemDetail.id}`"
           >
             発見済みにする
           </v-btn>
@@ -124,6 +124,7 @@
 </style>
 
 <script lang="ts" setup>
+import router from "@/router";
 import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
@@ -157,7 +158,7 @@ const drawer = ref(false)
 
 const showMapTypeControl = ref(false)
 
-const itemDetail = ref({title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
+const itemDetail = ref({id: "", title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
 const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
 
@@ -216,8 +217,6 @@ const showCurrentLocationMarkers = async () => {
 
   // google mapの表示領域を取得する
   const bounds = gmap?.getBounds()
-
-  console.log(bounds?.getSouthWest().lat())
 
   const resRaw = await fetch(`${backendBaseURL}/search`, {
     method: "POST",
@@ -321,7 +320,7 @@ const markerClicked = (id: string) => {
   const item = resultMarkers[id]
 
   // descriptionの更新
-  itemDetail.value = {title: "", tags: item.tags, note: item.note, date: item.date, pic: item.pic}
+  itemDetail.value = {id: id, title: "", tags: item.tags, note: item.note, date: item.date, pic: item.pic}
 
   // bottom sheetの表示
   drawer.value = true;

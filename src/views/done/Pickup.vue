@@ -11,7 +11,7 @@
                             <p>発見したものをリストから削除しました。
                             以下の情報を参考に、拾いに行ってください。</p>
 
-                            <span class="mt-5">会津若松市一箕町亀賀郷之原</span>
+                            <span class="mt-5">{{ itemDetail.title }}</span>
                             <div class="text-caption">{{itemDetail.note}}</div>
                             <div>
                             <v-chip
@@ -49,11 +49,50 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
-const itemDetail = ref({tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
-const center = { lat: 35.6809591, lng: 139.7673068 }
+const itemDetail = ref({title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
+const center = ref({ lat: 0, lng: 0 })
+
+const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
+
+const id = useRoute().params.id
+
+interface ResultItem {
+  id: number
+  tags: string[]
+  note: string
+  pic: string
+  location: { lat: number, lng: number }
+  date: string
+}
+
+onMounted(async () => {
+  const resRaw = await fetch(`${backendBaseURL}/item/${id}`)
+  const item: ResultItem = await resRaw.json()
+
+  // descriptionの更新
+  itemDetail.value = {title: "", tags: item.tags, note: item.note, date: item.date, pic: item.pic}
+
+  // 地図の中心の変更
+  center.value = {lat: item.location.lat, lng: item.location.lng}
+
+  // タイトルを変更
+  const geocoder = new google.maps.Geocoder()
+  geocoder.geocode({ location: new google.maps.LatLng(item.location.lat, item.location.lng) }, 
+    (results, status) => {
+      if (status != google.maps.GeocoderStatus.OK) return
+      if (results[0].geometry) {
+        console.log(results[0].formatted_address)
+        itemDetail.value.title = results[0].formatted_address
+      }
+  })
+
+  // 地図から削除
+  await fetch(`${backendBaseURL}/item/${id}`, { method: "DELETE"})
+})
 </script>
   

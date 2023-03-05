@@ -34,7 +34,7 @@ const routes = [
     component: () => import('@/layouts/default/MainOnly.vue'),
     children: [
       {
-        path: 'pickup',
+        path: 'pickup/:id',
         name: 'Pickup',
         component: () => import(/* webpackChunkName: "home" */ '@/views/done/Pickup.vue'),
       },
