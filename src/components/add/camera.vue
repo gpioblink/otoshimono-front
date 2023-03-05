@@ -1,20 +1,30 @@
 <template>
   <v-container class="pa-0" fluid>
-    <Camera :resolution="cameraSize" ref="camera" autoplay>
-        <v-row justify="center" class="">
-            <v-btn
-                @click="snapshot"
-                position="absolute"
-                color="white"
-                icon
-                style="bottom:20px; position:fixed;"
-                :loading="btnLoading"
-                class="rounded-circle">
-                    <v-icon color="grey" size="x-large" icon="mdi-circle-outline"></v-icon>
-            </v-btn>
-        </v-row>
-    </Camera>
-    <cameraConfirm :dialog="confirmDialog" :camera-size="reversedCameraSize" :url="<string>url"/>  
+    <v-row justify="center" class="">
+        <v-col cols="11" md="8">
+            <v-alert
+                  v-if="alert.title"
+                  variant="tonal"
+                  :title="alert.title"
+                  :text="alert.text"
+                  :type="alert.type"
+                ></v-alert>
+        </v-col>
+    </v-row>
+    <Camera @started="cameraStartedFunc" :resolution="cameraSize" ref="camera" autoplay></Camera>
+    <v-row justify="center" class="">
+        <v-btn
+            @click="snapshot"
+            position="absolute"
+            color="white"
+            icon
+            style="bottom:20px; position:fixed;"
+            :disabled="btnDisabled"
+            class="rounded-circle">
+                <v-icon color="grey" size="x-large" icon="mdi-circle-outline"></v-icon>
+        </v-btn>
+    </v-row>
+    <cameraConfirm :dialog="confirmDialog" :camera-size="reversedCameraSize" :image="image"/>  
   </v-container>
 </template>
 
@@ -24,8 +34,31 @@ import { ref, onMounted, reactive } from "vue";
 import Camera from "simple-vue-camera";
 import cameraConfirm from "./cameraConfirm.vue";
 
-const btnLoading = ref(false);
+const btnDisabled = ref(true);
 const confirmDialog = ref(false);
+
+interface Alert {
+    title: string,
+    text: string,
+    type: "success" | "info" | "warning" | "error" | undefined,
+}
+const alert = reactive(<Alert>{
+    title: '',
+    text: '',
+    type: undefined,
+});
+
+onMounted(() => {
+    alert.title = "カメラを起動しています...";
+    alert.text = "落とし物の画像を撮影するためにカメラを起動します。カメラのアクセスを許可してください。";
+    alert.type = "info";
+});
+
+const cameraStartedFunc = () => {
+    console.log("camera started");
+    alert.title = "";
+    btnDisabled.value = false;
+};
 
 const windowSize = reactive({
     width: 0,
@@ -70,15 +103,23 @@ onMounted(() => {
     onResize();
 });
 
-const url = ref<string>();
 const camera = ref<InstanceType<typeof Camera>>();
+    interface Image {
+        url: string,
+        blob: Blob,
+    }
+
+const image = reactive<Image>({
+    url: '',
+    blob: new Blob(),
+});
 const snapshot = async () => {
-  btnLoading.value = true;
+  btnDisabled.value = true;
     const blob = await camera.value?.snapshot(reversedCameraSize);
-  url.value = URL.createObjectURL(<Blob>blob);
-  console.log(url);
+  image.url = URL.createObjectURL(<Blob>blob);
+  console.log(image.url);
   confirmDialog.value = true;
-  btnLoading.value = false;
+  btnDisabled.value = false;
     /*
     const link = document.createElement('a');
     link.download = 'aaa.png'
