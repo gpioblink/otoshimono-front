@@ -220,6 +220,9 @@ const removeAllMarkers = () => {
     console.log("delete:", key)
     if (resultMarkers.hasOwnProperty(key)) {
         console.log("delete:", key)
+
+        resultMarkers[key].marker.setMap(null);
+
         delete resultMarkers[key];
     }
   }
