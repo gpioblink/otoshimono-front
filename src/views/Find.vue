@@ -14,6 +14,7 @@
         single-line
         hide-details
         @click:append-inner="lazyUnforcus()"
+        @keyup.enter="lazyUnforcus()"
     ></v-text-field>
 
   <v-navigation-drawer
