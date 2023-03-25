@@ -9,6 +9,7 @@
         style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 70%;"
         variant="solo"
         label="フィルターを入力"
+        v-model="filterQuery"
         append-inner-icon="mdi-magnify"
         single-line
         hide-details
@@ -157,6 +158,8 @@ const drawer = ref(false)
 
 const showMapTypeControl = ref(false)
 
+const filterQuery = ref("")
+
 const itemDetail = ref({id: "", title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
 
 const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
@@ -211,7 +214,23 @@ const addCurrentLocationMarker = () => {
   }
 }
 
+const removeAllMarkers = () => {
+  console.log(resultMarkers)
+  for (const key in resultMarkers) {
+    console.log("delete:", key)
+    if (resultMarkers.hasOwnProperty(key)) {
+        console.log("delete:", key)
+
+        resultMarkers[key].marker.setMap(null);
+
+        delete resultMarkers[key];
+    }
+  }
+}
+
 const showCurrentLocationMarkers = async () => {
+  removeAllMarkers()
+
   const gmap = mapRef.value?.map
   if(!mapRef.value) return
 
@@ -232,7 +251,7 @@ const showCurrentLocationMarkers = async () => {
       // "tags": [
       //     "手袋"
       // ],
-      // "query": "地球"
+      "query": filterQuery.value
     })
   })
   
@@ -292,6 +311,8 @@ const zoomChanged = () => {
 
 const lazyUnforcus = () => {
   setTimeout(() => { unforcus() }, 100 )
+
+  showCurrentLocationMarkers()
 }
 
 const unforcus = () => {
