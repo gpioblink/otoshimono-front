@@ -1,5 +1,5 @@
 <template>
-    <CameraModule />
+  <CameraModule />
 </template>
 
 
@@ -7,4 +7,3 @@
 import CameraModule from "@/components/add/camera.vue";
 
 </script>
-  

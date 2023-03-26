@@ -18,11 +18,6 @@ const routes = [
     component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
-        path: '/add',
-        name: 'Add',
-        component: () => import(/* webpackChunkName: "home" */ '@/views/Add.vue'),
-      },
-      {
         path: '/find',
         name: 'Find',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Find.vue'),
@@ -37,6 +32,24 @@ const routes = [
         path: 'pickup/:id',
         name: 'Pickup',
         component: () => import(/* webpackChunkName: "home" */ '@/views/done/Pickup.vue'),
+      },
+    ]
+  },
+  {
+    path: '/add',
+    component: () => import('@/layouts/default/MainOnly.vue'),
+    children: [
+      {
+        path: '',
+        name: 'Add',
+        props: true,
+        component: () => import(/* webpackChunkName: "home" */ '@/views/add/Index.vue'),
+      },
+      {
+        path: '/register',
+        name: 'Register',
+        props: true,
+        component: () => import(/* webpackChunkName: "home" */ '@/views/add/Register.vue'),
       },
     ]
   }

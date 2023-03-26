@@ -31,13 +31,12 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <registerDialog :dialog="dialog2" :tags="tags" :cameraSize="cameraSize" :pic="pic" :blobUrl="props.image.url"/> 
 </template>
 
 
 <script lang="ts" setup>
 import { ref, onMounted, reactive, watch } from "vue";
-import registerDialog from "./registerDialog.vue";
+import { useRoute, useRouter } from 'vue-router'
 
 interface Image {
   url: string,
@@ -58,6 +57,7 @@ const uploadLoading = ref(false)
 
 const tags = ref<string[]>([])
 const pic = ref<string>("")
+const router = useRouter()
 
 const upload = async () => {
   uploadLoading.value = true
@@ -79,6 +79,14 @@ const upload = async () => {
   dialog2.value = true
   dialog.value = false
   uploadLoading.value = false
+  console.log(tags.value, pic.value, props.cameraSize.width, props.cameraSize.height, props.image.url)
+  router.push({
+    name: 'Register', query: {
+    tags: tags.value,
+    pic: pic.value,
+    cameraWidth: props.cameraSize.width,
+    cameraHeight: props.cameraSize.height,
+  }})
 }
 
 </script>
