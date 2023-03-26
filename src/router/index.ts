@@ -37,7 +37,7 @@ const routes = [
   },
   {
     path: '/add',
-    component: () => import('@/layouts/default/MainOnly.vue'),
+    component: () => import('@/layouts/default/Default.vue'),
     children: [
       {
         path: '',
