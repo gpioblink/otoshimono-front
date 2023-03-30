@@ -20,12 +20,12 @@
             icon
             style="bottom:20px; position:fixed;"
             :disabled="btnDisabled"
-            class="rounded-circle">
+        >
                 <v-icon color="grey" size="x-large" icon="mdi-circle-outline"></v-icon>
         </v-btn>
     </v-row>
-    <cameraConfirm :dialog="confirmDialog" :camera-size="reversedCameraSize" :image="image"/>  
-  </v-container>
+    <cameraConfirm v-if="confirmDialog" v-model:dialog="confirmDialog" :camera-size="reversedCameraSize" :image="image" />  
+    </v-container>
 </template>
 
 
@@ -114,11 +114,12 @@ const image = reactive<Image>({
     blob: new Blob(),
 });
 const snapshot = async () => {
+  console.log("snapshot")
   btnDisabled.value = true;
-    const blob = await camera.value?.snapshot(reversedCameraSize);
-    image.url = URL.createObjectURL(<Blob>blob);
-    image.blob = <Blob>blob;
   confirmDialog.value = true;
+  const blob = await camera.value?.snapshot(reversedCameraSize);
+  image.url = URL.createObjectURL(<Blob>blob);
+  image.blob = <Blob>blob;
   btnDisabled.value = false;
 }
 </script>

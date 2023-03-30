@@ -49,6 +49,10 @@ interface ResponseData {
   pic: string,
   date: string,
   note: string,
+  item_name: string,
+  situation: string,
+  others: string,
+  color: string,
   tags: string[],
   location: {
     lat: number,
