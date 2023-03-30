@@ -1,7 +1,8 @@
 <template>
   <v-dialog
-    v-model="dialog"
+    v-model:dialog="dialog"
     fullscreen
+    :disabled="false"
     activator="parent"
   >
     <v-card class="pt-5">
@@ -22,7 +23,7 @@
       <v-card-actions>
         <v-row>
           <v-col>
-            <v-btn color="primary" block @click="dialog = false">再撮影</v-btn>
+            <v-btn color="primary" block @click="closeDialog">再撮影</v-btn>
           </v-col>
           <v-col>
             <v-btn @click="upload" :loading="uploadLoading" color="primary" variant="outlined" block>登録</v-btn>
@@ -50,14 +51,19 @@ interface Props {
   },
   image: Image,
 }
+interface Emits {
+  (e: "update:dialog", dialog: boolean): void;
+}
 const props = defineProps<Props>()
-const dialog = ref(props.dialog)
+const emit = defineEmits<Emits>()
+const dialog = ref(false)
 const dialog2 = ref(false)
 const uploadLoading = ref(false)
 
 const tags = ref<string[]>([])
 const pic = ref<string>("")
 const router = useRouter()
+
 
 const upload = async () => {
   uploadLoading.value = true
@@ -77,7 +83,7 @@ const upload = async () => {
   tags.value = data.tags;
   pic.value = data.pic;
   dialog2.value = true
-  dialog.value = false
+  closeDialog()
   uploadLoading.value = false
   console.log(tags.value, pic.value, props.cameraSize.width, props.cameraSize.height, props.image.url)
   router.push({
@@ -87,6 +93,10 @@ const upload = async () => {
     cameraWidth: props.cameraSize.width,
     cameraHeight: props.cameraSize.height,
   }})
+}
+
+const closeDialog = () => {
+  emit("update:dialog", false);
 }
 
 </script>

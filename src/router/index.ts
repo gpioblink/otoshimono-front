@@ -45,8 +45,13 @@ const routes = [
         props: true,
         component: () => import(/* webpackChunkName: "home" */ '@/views/add/Index.vue'),
       },
+    ]
+  }, {
+    path: '/add/register',
+    component: () => import('@/layouts/default/MainOnly.vue'),
+    children: [
       {
-        path: '/register',
+        path: '',
         name: 'Register',
         props: true,
         component: () => import(/* webpackChunkName: "home" */ '@/views/add/Register.vue'),

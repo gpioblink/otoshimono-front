@@ -35,6 +35,19 @@
           <v-col
             cols="12"
             md="5"
+          >
+            <v-text-field
+              v-model="data.date"
+              :rules="[v => !!v || '拾得日は必須です。']"
+              label="拾得日"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col
+            cols="12"
+            md="5"
             justify="center"
           >
           <v-combobox
@@ -54,26 +67,52 @@
             cols="12"
             md="5"
           >
-            <v-textarea
-              v-model="data.note"
-              auto-grow
-              rows="2"
-              label="物品名・色・状況など"
+            <v-text-field
+              v-model="data.item_name"
+              label="物品名"
+              hint="例: 手袋, モバイルバッテリー"
               class="mx-auto"
-            ></v-textarea>
+            ></v-text-field>
           </v-col>
         </v-row>
-          <v-row justify="center">
+        <v-row justify="center">
           <v-col
             cols="12"
             md="5"
           >
             <v-text-field
-              v-model="data.date"
-              :rules="[v => !!v || '拾得日は必須です。']"
-              label="拾得日"
-              required
+              v-model="data.color"
+              label="色"
+              hint="例: 水色 黄色とうすい青色"
+              class="mx-auto"
             ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col
+            cols="12"
+            md="5"
+          >
+            <v-text-field
+              v-model="data.situation"
+              label="状況"
+              hint="例: 東京駅行きのバス車内"
+              class="mx-auto"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col
+            cols="12"
+            md="5"
+          >
+            <v-textarea
+              v-model="data.note"
+              auto-grow
+              rows="2"
+              label="その他"
+              class="mx-auto"
+            ></v-textarea>
           </v-col>
         </v-row>
         <v-row justify="center">
@@ -84,7 +123,7 @@
             <v-card :loading="registerDisabled" elevation="0">
               <v-card-title class="grey--text">拾得位置</v-card-title>
               <v-card-text text-color="grey">ピンをドラッグして、正しい位置に修正してください。</v-card-text>
-              <GoogleMap  ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
+              <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
                   style="width: 100%; height: 300px;" :center="data.location" :zoom="15" :fullscreen-control="false">
               </GoogleMap>
             </v-card>
@@ -114,6 +153,7 @@ import { ref, onMounted, reactive, toRefs, watch } from "vue";
 import { useRoute } from "vue-router";
 import dayjs from "dayjs";
 import { GoogleMap, Marker } from "vue3-google-map";
+import { Loader } from "@googlemaps/js-api-loader"
 import thanksDialog from "@/components/add/thanksDialog.vue";
 
 interface Query {
@@ -125,56 +165,16 @@ interface Query {
 const route = useRoute()
 const query = <Query><unknown>route.query
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
+const loader = new Loader({
+  apiKey: "AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0",
+  version: "weekly",
+});
 let markers: google.maps.Marker[] = [];
-onMounted(() => {
+onMounted(async() => {
   alert.type = "info"
   alert.title = "位置情報を取得しています..."
   alert.text = "拾得位置を特定するために位置情報を利用します。位置情報の取得を許可してください。"
   moveToTop()
-  navigator.geolocation.getCurrentPosition((position) => {
-    alert.title = ""
-    data.location.lat = position.coords.latitude
-    data.location.lng = position.coords.longitude
-    console.log(data.location)
-    const gmap = mapRef.value?.map
-    const gmapPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
-    gmap?.setCenter(gmapPosition)
-    const marker = new google.maps.Marker({
-        position: gmapPosition,
-      map: gmap,
-        draggable: true,
-    });
-    marker.addListener("dragend", (event) => {
-      const position : google.maps.LatLng = event.latLng!
-      data.location.lat = position.lat()
-      data.location.lng = position.lng()
-    })
-    markers.push(marker)
-    registerDisabled.value = false
-  }, (error) => {
-    data.location.lat = 35.685175
-    data.location.lng = 139.7528
-    console.log(data.location)
-    const gmap = mapRef.value?.map
-    const gmapPosition = new google.maps.LatLng(data.location.lat, data.location.lng)
-    gmap?.setCenter(gmapPosition)
-    const marker = new google.maps.Marker({
-        position: gmapPosition,
-      map: gmap,
-        draggable: true,
-    });
-    marker.addListener("dragend", (event) => {
-      const position : google.maps.LatLng = event.latLng!
-      data.location.lat = position.lat()
-      data.location.lng = position.lng()
-    })
-    markers.push(marker)
-    registerDisabled.value = false
-  }, {
-    enableHighAccuracy: true,
-    timeout: 10000,
-    maximumAge: Infinity
-  })
 })
 
 const dialog3 = ref(false)
@@ -208,10 +208,7 @@ const validate = () => {
     alert.type = "error"
     alert.title = "拾得日が不正です。"
     alert.text = "拾得日はYYYY-MM-DD HH:mmの形式で入力してください。"
-    window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-    })
+    moveToTop()
     return false
   }
   if (!data.tags || data.tags.length === 0) {
@@ -231,6 +228,10 @@ interface ResponseData {
   pic: string,
   date: string,
   note: string,
+  item_name: string,
+  situation: string,
+  others: string,
+  color: string,
   tags: string[],
   location: {
     lat: number,
@@ -243,7 +244,6 @@ const register = async () => {
   if (!validate()) return
   registerLoading.value = true
   data.date = dayjs(data.date).toISOString()
-  console.log(JSON.stringify(data))
   const response = await fetch(`${import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL}/item`, {
       method: "POST",
     body: JSON.stringify(data),
@@ -273,18 +273,64 @@ const data = reactive({
 		lng: 0
   },
   pic: query.pic,
-})
-
-watch(data, (val) => {
-  console.log(val)
+  item_name: "",
+  situation: "",
+  others: "",
+  color: "",
 })
 
 watch(query, (val) => {
   data.pic = val.pic
 })
 
+watch(() => mapRef.value?.ready, (ready) => {
+  if (!ready) return
+  // do something with the api using `mapRef.value.api`
+  // or with the map instance using `mapRef.value.map`
+  data.location.lat = 35.685175
+  data.location.lng = 139.7528
+  console.log(data.location)
+  const gmap = mapRef.value?.map
+  const gmapPosition = new google.maps.LatLng(data.location.lat, data.location.lng)
+  gmap?.setCenter(gmapPosition)
+  const marker = new google.maps.Marker({
+    position: gmapPosition,
+    map: gmap,
+    draggable: true,
+  });
+  marker.addListener("dragend", (event) => {
+    const position : google.maps.LatLng = event.latLng!
+    data.location.lat = position.lat()
+    data.location.lng = position.lng()
+  })
+  markers.push(marker)
+  navigator.geolocation.getCurrentPosition((position) => {
+    alert.title = ""
+    data.location.lat = position.coords.latitude
+    data.location.lng = position.coords.longitude
+    console.log(data.location)
+    const gmap = mapRef.value?.map
+    const gmapPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
+    gmap?.setCenter(gmapPosition)
+    markers[0].setPosition(gmapPosition)
+    registerDisabled.value = false
+  }, (error) => {
+    console.log(error)
+    alert.title = ""
+    registerDisabled.value = false
+  }, {
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: Infinity
+  })
+})
+
+
 const moveToTop = () => {
-  
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  })
 }
 
 
