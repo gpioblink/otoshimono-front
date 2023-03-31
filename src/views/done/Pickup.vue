@@ -11,7 +11,7 @@
                             <p>We have removed the finds from the list.
                             Please use the information below to pick them up.</p>
 
-                            <span class="mt-5">{{ itemDetail.title }}</span>
+                            <span class="mt-5">{{ itemDetail.address }}</span>
                             <div class="text-caption">{{itemDetail.note}}</div>
                             <div>
                             <div class="text-h6">{{itemDetail.address}}</div>
