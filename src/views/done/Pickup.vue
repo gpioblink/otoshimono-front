@@ -99,6 +99,7 @@ onMounted(async () => {
     color: item.color,
     situation: item.situation,
     item_name: item.item_name,
+    address: ""
   }
 
   // 地図の中心の変更
