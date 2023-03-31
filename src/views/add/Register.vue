@@ -1,10 +1,10 @@
 <template>
 <v-card class="pt-5">
   <v-card-title>
-    登録フォーム
+    Registration Form
   </v-card-title>
   <v-card-text>
-    落とし物を登録します。
+    Register lost items
   </v-card-text>
   <v-card-item>
     <v-form>
@@ -38,8 +38,8 @@
           >
             <v-text-field
               v-model="data.date"
-              :rules="[v => !!v || '拾得日は必須です。']"
-              label="拾得日"
+              :rules="[v => !!v || 'Pickup date is required.']"
+              label="Acquisition date"
               required
             ></v-text-field>
           </v-col>
@@ -55,9 +55,9 @@
             multiple
             chips
             required
-            label="タグを選択または追加"
+            label="Select or add tags"
             v-model="data.tags"
-            :rules="[v => !!v || '少なくとも１つのタグを選択してください。']"
+            :rules="[v => !!v || 'Please select at least one tag.']"
             :items="<Array<string>>query.tags"
           ></v-combobox>
           </v-col>
@@ -69,8 +69,8 @@
           >
             <v-text-field
               v-model="data.item_name"
-              label="物品名"
-              hint="例: 手袋, モバイルバッテリー"
+              label="Item name"
+              hint="Examples: gloves, mobile battery"
               class="mx-auto"
             ></v-text-field>
           </v-col>
@@ -82,8 +82,8 @@
           >
             <v-text-field
               v-model="data.color"
-              label="色"
-              hint="例: 水色 黄色とうすい青色"
+              label="Color"
+              hint="Example: light blue yellow and pale blue"
               class="mx-auto"
             ></v-text-field>
           </v-col>
@@ -95,8 +95,8 @@
           >
             <v-text-field
               v-model="data.situation"
-              label="状況"
-              hint="例: 東京駅行きのバス車内"
+              label="Situation"
+              hint="Example: Inside the bus bound for Tokyo Station"
               class="mx-auto"
             ></v-text-field>
           </v-col>
@@ -110,7 +110,7 @@
               v-model="data.note"
               auto-grow
               rows="2"
-              label="その他"
+              label="Others"
               class="mx-auto"
             ></v-textarea>
           </v-col>
@@ -121,9 +121,9 @@
             md="5"
           >
             <v-card :loading="registerDisabled" elevation="0">
-              <v-card-title class="grey--text">拾得位置</v-card-title>
-              <v-card-text text-color="grey">ピンをドラッグして、正しい位置に修正してください。</v-card-text>
-              <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
+              <v-card-title class="grey--text">Pick up position</v-card-title>
+              <v-card-text text-color="grey">Please drag the pin to fix it in the correct position.</v-card-text>
+              <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0"
                   style="width: 100%; height: 300px;" :center="data.location" :zoom="15" :fullscreen-control="false">
               </GoogleMap>
             </v-card>
@@ -136,10 +136,10 @@
   <v-card-actions>
     <v-row>
       <v-col>
-        <v-btn color="primary" block to="/">キャンセル</v-btn>
+        <v-btn color="primary" block to="/">Cancel</v-btn>
       </v-col>
       <v-col>
-        <v-btn :loading="registerLoading" :disabled="registerDisabled" color="primary" variant="outlined" block @click="register">登録</v-btn>
+        <v-btn :loading="registerLoading" :disabled="registerDisabled" color="primary" variant="outlined" block @click="register">Register</v-btn>
       </v-col>
   </v-row>
   </v-card-actions>
@@ -172,8 +172,8 @@ const loader = new Loader({
 let markers: google.maps.Marker[] = [];
 onMounted(async() => {
   alert.type = "info"
-  alert.title = "位置情報を取得しています..."
-  alert.text = "拾得位置を特定するために位置情報を利用します。位置情報の取得を許可してください。"
+  alert.title = "Getting location information..."
+  alert.text = "We use location information to identify the pickup location. Please allow the acquisition of location information."
   moveToTop()
 })
 
@@ -196,8 +196,8 @@ const validate = () => {
   alert.text = ""
   if (!data.date) {
     alert.type = "error"
-    alert.title = "拾得日が入力されていません。"
-    alert.text = "拾得日は必須です。"
+    alert.title = "You have not entered a found date."
+    alert.text = "Please pickup date is required."
     window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -206,15 +206,15 @@ const validate = () => {
   }
   if (data.date && !dayjs(data.date).isValid()) {
     alert.type = "error"
-    alert.title = "拾得日が不正です。"
-    alert.text = "拾得日はYYYY-MM-DD HH:mmの形式で入力してください。"
+    alert.title = "Pickup date is invalid."
+    alert.text = "Please enter the found date in YYYY-MM-DD HH:mm format."
     moveToTop()
     return false
   }
   if (!data.tags || data.tags.length === 0) {
     alert.type = "error"
-    alert.title = "タグが選択されていません。"
-    alert.text = "少なくとも１つのタグを選択してください。"
+    alert.title = "No tags selected."
+    alert.text = "Please select at least one tag."
     window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -251,8 +251,8 @@ const register = async () => {
   }).catch((e) => {
     moveToTop()
     alert.type = "error"
-    alert.title = "登録に失敗しました。"
-    alert.text = "登録に失敗しました。再読込して登録を行ってください。"
+    alert.title = "Registration failed."
+    alert.text = "Registration failed. Please reload and register again."
     console.log(e);
   });
   responseData = await response?.json()
@@ -337,4 +337,3 @@ const moveToTop = () => {
 
 
 </script>
-  
