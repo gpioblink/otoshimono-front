@@ -5,11 +5,11 @@
                 <v-col cols="auto">
                     <v-card border density="comfortable">
                         <v-card-title class="ma-4">
-                            よかったですね！！🎉🎉
+                            Good for you!!🎉🎉
                         </v-card-title>
                         <v-card-text>
-                            <p>発見したものをリストから削除しました。
-                            以下の情報を参考に、拾いに行ってください。</p>
+                            <p>We have removed the finds from the list.
+                            Please use the information below to pick them up.</p>
 
                             <span class="mt-5">{{ itemDetail.title }}</span>
                             <div class="text-caption">{{itemDetail.note}}</div>
@@ -39,7 +39,7 @@
                             ></v-img>
                         </v-card-text>
                         <v-card-actions>
-                            <v-btn class="mx-auto" to="/">TOPに戻る</v-btn>
+                            <v-btn class="mx-auto" to="/">Back to TOP</v-btn>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -82,7 +82,7 @@ onMounted(async () => {
 
   // タイトルを変更
   const geocoder = new google.maps.Geocoder()
-  geocoder.geocode({ location: new google.maps.LatLng(item.location.lat, item.location.lng) }, 
+  geocoder.geocode({ location: new google.maps.LatLng(item.location.lat, item.location.lng) },
     (results, status) => {
       if (status != google.maps.GeocoderStatus.OK) return
       if (results[0].geometry) {
@@ -95,4 +95,3 @@ onMounted(async () => {
   await fetch(`${backendBaseURL}/item/${id}`, { method: "DELETE"})
 })
 </script>
-  
