@@ -26,24 +26,28 @@
     >
 
     <v-card height="100%" class="card-outter" style="position: relative">
-      <v-card-title>{{ itemDetail.title }}
-        <div class="text-caption">{{itemDetail.note}}</div>
+      <v-card-title>{{ itemDetail?.address }}
+        <div class="text-caption">{{itemDetail?.note}}</div>
         <div>
           <v-chip
-            v-for="(tag, i) in itemDetail.tags" :key="i"
+            v-for="(tag, i) in itemDetail?.tags" :key="i"
             class="ma-1"
             label
           >
             <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
             {{ tag }}
           </v-chip>
+          <div class="text-body-1">{{itemDetail?.item_name}}</div>
+          <div class="text-body-1">{{itemDetail?.color}}</div>
+          <div class="text-body-1">{{itemDetail?.situation}}</div>
+          <div class="text-body-1">{{itemDetail?.note}}</div>
         </div>
       </v-card-title>
       <v-card-item>
         <div>
           <v-img
             height="200"
-            :src="itemDetail.pic"
+            :src="itemDetail?.pic"
             cover
             class="text-white"
           ></v-img>
@@ -72,21 +76,24 @@
         <v-card-title>Final confirmation</v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-        <span>{{ itemDetail.title }}</span>
-        <div class="text-caption">{{itemDetail.note}}</div>
         <div>
+          <div class="text-h6">{{itemDetail?.address}}</div>
           <v-chip
-            v-for="(tag, i) in itemDetail.tags" :key="i"
-            class="ma-1"
-            label
+              v-for="(tag, i) in itemDetail?.tags" :key="i"
+              class="ma-1"
+              label
           >
-            <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
-            {{ tag }}
+              <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
+              {{ tag }}
           </v-chip>
+          <div class="text-body-1">{{itemDetail?.item_name}}</div>
+          <div class="text-body-1">{{itemDetail?.color}}</div>
+          <div class="text-body-1">{{itemDetail?.situation}}</div>
+          <div class="text-body-1">{{itemDetail?.note}}</div>
         </div>
         <v-spacer class="mt-4"></v-spacer>
         <v-img
-          :src="itemDetail.pic"
+          :src="itemDetail?.pic"
           cover
           class="text-white"
         ></v-img>
@@ -104,7 +111,7 @@
           <v-btn
             color="blue-darken-1"
             variant="text"
-            :to="`/done/pickup/${itemDetail.id}`"
+            :to="`/done/pickup/${itemDetail?.id}`"
           >
           Mark as discovered
           </v-btn>
@@ -130,20 +137,19 @@ import { onMounted, ref, watch } from "vue";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 interface ResultMarker {
-  id: number
+  id: string
   tags: string[]
   note: string
   pic: string
   location: { lat: number, lng: number }
   date: string
+  item_name: string
+  color: string
+  situation: string,
+  address: string
 }
 
-interface OtoshimonoMarker {
-  tags: string[]
-  note: string
-  pic: string
-  location: { lat: number, lng: number }
-  date: string
+interface OtoshimonoMarker extends ResultMarker {
   marker: google.maps.Marker
 }
 
@@ -161,7 +167,18 @@ const showMapTypeControl = ref(false)
 
 const filterQuery = ref("")
 
-const itemDetail = ref({id: "", title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
+const itemDetail = ref<ResultMarker>({
+  id: "",
+  tags: [],
+  note: "",
+  pic: "",
+  location: { lat: 0, lng: 0 },
+  date: "",
+  item_name: "",
+  color: "",
+  situation: "",
+  address: ""
+})
 
 const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
 
@@ -280,12 +297,17 @@ const showCurrentLocationMarkers = async () => {
 
     // 詳細情報保存用の配列に詰める
     resultMarkers[item.id] = {
+      id: item.id,
       tags: item.tags,
       note: item.note,
       pic: item.pic,
       location: { lat: item.location.lat, lng: item.location.lng },
       date: item.date,
-      marker: marker
+      marker: marker,
+      item_name: item.item_name,
+      color: item.color,
+      situation: item.situation,
+      address: ""
     }
 
   }
@@ -342,7 +364,18 @@ const markerClicked = (id: string) => {
   const item = resultMarkers[id]
 
   // descriptionの更新
-  itemDetail.value = {id: id, title: "", tags: item.tags, note: item.note, date: item.date, pic: item.pic}
+  itemDetail.value = {
+    id: id,
+    address: "",
+    tags: item.tags,
+    note: item.note,
+    date: item.date,
+    pic: item.pic,
+    item_name: item.item_name,
+    color: item.color,
+    situation: item.situation,
+    location: { lat: item.location.lat, lng: item.location.lng }
+  }
 
   // bottom sheetの表示
   drawer.value = true;
@@ -354,7 +387,7 @@ const markerClicked = (id: string) => {
       if (status != google.maps.GeocoderStatus.OK) return
       if (results[0].geometry) {
         console.log(results[0].formatted_address)
-        itemDetail.value.title = results[0].formatted_address
+        itemDetail.value.address = results[0].formatted_address
       }
   })
 }
