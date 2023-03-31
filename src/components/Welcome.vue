@@ -8,11 +8,11 @@
                       Welcome!
                     </v-card-title>
                     <v-card-text>
-                       The "Otoshimono App" is a tool that allows users to share their low-value lost and found items, such as umbrellas and gloves, with people all over the world by taking a picture of them.
+                       The "Otoshimono App" is a tool that enable users to share their low-value lost and found items, such as umbrellas and gloves, with people all over the world by taking a picture of them.
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn class="mx-auto" to="/add">Register what you find</v-btn>
-                        <v-btn class="mx-auto" to="/find">Look for lost items</v-btn>
+                        <v-btn class="mx-auto" to="/add">Register</v-btn>
+                        <v-btn class="mx-auto" to="/find">Find</v-btn>
 
                     </v-card-actions>
                 </v-card>

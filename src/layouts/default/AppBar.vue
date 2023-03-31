@@ -10,13 +10,13 @@
           <v-tab
             to="/add"
           >
-          Register what you find
+          Register
           </v-tab>
 
           <v-tab
             to="/find"
           >
-          Look for lost items
+          Find
           </v-tab>
         </v-tabs>
       </template>
