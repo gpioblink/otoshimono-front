@@ -64,7 +64,7 @@
             {{ tag }}
           </v-chip>
           <div class="text-body-1">{{itemDetail?.item_name}}</div>
-          <div class="text-body-1">{{itemDetail?.color}}</div>
+          <div class="text-body-1">{{itemDetail?.colour}}</div>
           <div class="text-body-1">{{itemDetail?.situation}}</div>
           <div class="text-body-1">{{itemDetail?.note}}</div>
         </div>
@@ -113,7 +113,7 @@
               {{ tag }}
           </v-chip>
           <div class="text-body-1">{{itemDetail?.item_name}}</div>
-          <div class="text-body-1">{{itemDetail?.color}}</div>
+          <div class="text-body-1">{{itemDetail?.colour}}</div>
           <div class="text-body-1">{{itemDetail?.situation}}</div>
           <div class="text-body-1">{{itemDetail?.note}}</div>
         </div>
@@ -170,7 +170,7 @@ interface ResultMarker {
   location: { lat: number, lng: number }
   date: string
   item_name: string
-  color: string
+  colour: string
   situation: string,
   address: string
 }
@@ -203,7 +203,7 @@ const itemDetail = ref<ResultMarker>({
   location: { lat: 0, lng: 0 },
   date: "",
   item_name: "",
-  color: "",
+  colour: "",
   situation: "",
   address: ""
 })
@@ -333,7 +333,7 @@ const showCurrentLocationMarkers = async () => {
       date: item.date,
       marker: marker,
       item_name: item.item_name,
-      color: item.color,
+      colour: item.colour,
       situation: item.situation,
       address: ""
     }
@@ -431,7 +431,7 @@ const markerClicked = (id: string) => {
     date: item.date,
     pic: item.pic,
     item_name: item.item_name,
-    color: item.color,
+    colour: item.colour,
     situation: item.situation,
     location: { lat: item.location.lat, lng: item.location.lng }
   }
