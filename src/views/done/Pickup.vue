@@ -10,10 +10,9 @@
                         <v-card-text>
                             <p>発見したものをリストから削除しました。
                             以下の情報を参考に、拾いに行ってください。</p>
-
-                            <span class="mt-5">{{ itemDetail.title }}</span>
-                            <div class="text-caption">{{itemDetail.note}}</div>
+                            <v-divider class="my-5"></v-divider>
                             <div>
+                            <div class="text-h6">{{itemDetail.address}}</div>
                             <v-chip
                                 v-for="(tag, i) in itemDetail.tags" :key="i"
                                 class="ma-1"
@@ -22,6 +21,10 @@
                                 <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
                                 {{ tag }}
                             </v-chip>
+                            <div class="text-body-1">{{itemDetail.item_name}}</div>
+                            <div class="text-body-1">{{itemDetail.color}}</div>
+                            <div class="text-body-1">{{itemDetail.situation}}</div>
+                            <div class="text-body-1">{{itemDetail.note}}</div>
                             </div>
 
                             <v-spacer class="mt-4"></v-spacer>
@@ -54,7 +57,16 @@ import { useRoute } from "vue-router";
 import { GoogleMap, Marker } from "vue3-google-map";
 
 const mapRef = ref<InstanceType<typeof GoogleMap> | null>(null)
-const itemDetail = ref({title: "", tags: ["ああああ", "いいいい"], note: "地球に落ちていました", date: "2099-01-01", pic: "https://cdn.vuetifyjs.com/images/cards/foster.jpg"})
+const itemDetail = ref({
+  address: "",
+  tags: [""],
+  note: "",
+  date: "",
+  pic: "https://placehold.jp/30/cfcfcf/ffffff/500x500.png?text=Loading...",
+  color: "",
+  situation: "",
+  item_name: "",
+})
 const center = ref({ lat: 0, lng: 0 })
 
 const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
@@ -67,7 +79,11 @@ interface ResultItem {
   note: string
   pic: string
   location: { lat: number, lng: number }
-  date: string
+  date: string,
+  item_name: string,
+  color: string,
+  situation: string,
+  others: string
 }
 
 onMounted(async () => {
@@ -75,7 +91,15 @@ onMounted(async () => {
   const item: ResultItem = await resRaw.json()
 
   // descriptionの更新
-  itemDetail.value = {title: "", tags: item.tags, note: item.note, date: item.date, pic: item.pic}
+  itemDetail.value = {
+    tags: item.tags,
+    note: item.note,
+    date: item.date,
+    pic: item.pic,
+    color: item.color,
+    situation: item.situation,
+    item_name: item.item_name,
+  }
 
   // 地図の中心の変更
   center.value = {lat: item.location.lat, lng: item.location.lng}
@@ -87,7 +111,7 @@ onMounted(async () => {
       if (status != google.maps.GeocoderStatus.OK) return
       if (results[0].geometry) {
         console.log(results[0].formatted_address)
-        itemDetail.value.title = results[0].formatted_address
+        itemDetail.value.address = results[0].formatted_address
       }
   })
 

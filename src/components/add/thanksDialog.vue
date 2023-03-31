@@ -9,8 +9,6 @@
     </v-card-title>
     <v-card-text>
         <p>落とし物を登録しました。</p>
-        <div class="text-caption">{{props.data.note}}</div>
-        <div>
         <v-chip
             v-for="(tag, i) in props.data.tags" :key="i"
             class="ma-1"
@@ -19,7 +17,10 @@
             <v-icon start icon="mdi-music-accidental-sharp"></v-icon>
             {{ tag }}
         </v-chip>
-        </div>
+        <div class="text-body-1">{{props.data.item_name}}</div>
+        <div class="text-body-1">{{props.data.color}}</div>
+        <div class="text-body-1">{{props.data.situation}}</div>
+        <div class="text-body-1">{{props.data.note}}</div>
         <v-spacer class="mt-4"></v-spacer>
         <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
             style="width: 100%; height: 300px;" :center="props.data.location" :zoom="15" :fullscreen-control="false">
