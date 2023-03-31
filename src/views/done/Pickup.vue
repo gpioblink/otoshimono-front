@@ -10,7 +10,7 @@
                         <v-card-text>
                             <p>We have removed the finds from the list.
                             Please use the information below to pick them up.</p>
-
+                            <p>You can review information on lost and found items from the "Found Item History" section.</p>
                             <span class="mt-5">{{ itemDetail.address }}</span>
                             <div class="text-caption">{{itemDetail.note}}</div>
                             <div>
@@ -24,7 +24,7 @@
                                 {{ tag }}
                             </v-chip>
                             <div class="text-body-1">{{itemDetail.item_name}}</div>
-                            <div class="text-body-1">{{itemDetail.color}}</div>
+                            <div class="text-body-1">{{itemDetail.colour}}</div>
                             <div class="text-body-1">{{itemDetail.situation}}</div>
                             <div class="text-body-1">{{itemDetail.note}}</div>
                             </div>
@@ -65,7 +65,7 @@ const itemDetail = ref({
   note: "",
   date: "",
   pic: "https://placehold.jp/30/cfcfcf/ffffff/500x500.png?text=Loading...",
-  color: "",
+  colour: "",
   situation: "",
   item_name: "",
 })
@@ -83,7 +83,7 @@ interface ResultItem {
   location: { lat: number, lng: number }
   date: string,
   item_name: string,
-  color: string,
+  colour: string,
   situation: string,
   others: string
 }
@@ -98,7 +98,7 @@ onMounted(async () => {
     note: item.note,
     date: item.date,
     pic: item.pic,
-    color: item.color,
+    colour: item.colour,
     situation: item.situation,
     item_name: item.item_name,
     address: ""
@@ -119,6 +119,10 @@ onMounted(async () => {
   })
 
   // 地図から削除
-  await fetch(`${backendBaseURL}/item/${id}`, { method: "DELETE"})
+    await fetch(`${backendBaseURL}/item/${id}`, { method: "DELETE" })
+
+  // localStorageに保存
+    localStorage.setItem("otoshimono", JSON.stringify(item));
+    console.log("Saved to local storage", item)
 })
 </script>

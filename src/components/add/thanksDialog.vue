@@ -2,6 +2,7 @@
   <v-dialog
     v-model="dialog3"
     fullscreen
+    :disabled=true
   >
   <v-card density="comfortable">
     <v-card-title class="ma-4">
@@ -9,7 +10,6 @@
     </v-card-title>
     <v-card-text>
         <p>You registered a lost item.</p>
-        <div class="text-caption">{{props.data.note}}</div>
         <v-chip
             v-for="(tag, i) in props.data.tags" :key="i"
             class="ma-1"
@@ -19,7 +19,7 @@
             {{ tag }}
         </v-chip>
         <div class="text-body-1">{{props.data.item_name}}</div>
-        <div class="text-body-1">{{props.data.color}}</div>
+        <div class="text-body-1">{{props.data.colour}}</div>
         <div class="text-body-1">{{props.data.situation}}</div>
         <div class="text-body-1">{{props.data.note}}</div>
         <v-spacer class="mt-4"></v-spacer>
@@ -54,7 +54,7 @@ interface ResponseData {
   item_name: string,
   situation: string,
   others: string,
-  color: string,
+  colour: string,
   tags: string[],
   location: {
     lat: number,

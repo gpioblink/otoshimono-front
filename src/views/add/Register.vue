@@ -81,7 +81,7 @@
             md="5"
           >
             <v-text-field
-              v-model="data.color"
+              v-model="data.colour"
               label="Color"
               hint="Example: light blue yellow and pale blue"
               class="mx-auto"
@@ -122,7 +122,7 @@
           >
             <v-card :loading="registerDisabled" elevation="0">
               <v-card-title class="grey--text">Pick up position</v-card-title>
-              <v-card-text text-color="grey">Please drag the pin to fix it in the correct position.</v-card-text>
+              <v-card-text text-colour="grey">Please drag the pin to fix it in the correct position.</v-card-text>
               <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0"
                   style="width: 100%; height: 300px;" :center="data.location" :zoom="15" :fullscreen-control="false">
               </GoogleMap>
@@ -136,10 +136,10 @@
   <v-card-actions>
     <v-row>
       <v-col>
-        <v-btn color="primary" block to="/">Cancel</v-btn>
+        <v-btn colour="primary" block to="/">Cancel</v-btn>
       </v-col>
       <v-col>
-        <v-btn :loading="registerLoading" :disabled="registerDisabled" color="primary" variant="outlined" block @click="register">Register</v-btn>
+        <v-btn :loading="registerLoading" :disabled="registerDisabled" colour="primary" variant="outlined" block @click="register">Register</v-btn>
       </v-col>
   </v-row>
   </v-card-actions>
@@ -231,7 +231,7 @@ interface ResponseData {
   item_name: string,
   situation: string,
   others: string,
-  color: string,
+  colour: string,
   tags: string[],
   location: {
     lat: number,
@@ -276,7 +276,7 @@ const data = reactive({
   item_name: "",
   situation: "",
   others: "",
-  color: "",
+  colour: "",
 })
 
 watch(query, (val) => {

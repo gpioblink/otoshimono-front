@@ -11,6 +11,11 @@ const routes = [
         name: 'Home',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
+      {
+        path: 'history',
+        name: 'History',
+        component: () => import(/* webpackChunkName: "home" */ '@/views/History.vue'),
+      }
     ]
   },
   {
@@ -21,7 +26,7 @@ const routes = [
         path: '/find',
         name: 'Find',
         component: () => import(/* webpackChunkName: "home" */ '@/views/Find.vue'),
-      },
+      }
     ],
   },
   {
