@@ -5,10 +5,10 @@
   >
   <v-card density="comfortable">
     <v-card-title class="ma-4">
-        ご協力ありがとうございます！
+      Thanks for your cooperation!
     </v-card-title>
     <v-card-text>
-        <p>落とし物を登録しました。</p>
+        <p>You registered a lost item.</p>
         <div class="text-caption">{{props.data.note}}</div>
         <div>
         <v-chip
@@ -21,7 +21,7 @@
         </v-chip>
         </div>
         <v-spacer class="mt-4"></v-spacer>
-        <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0" 
+        <GoogleMap ref="mapRef" api-key="AIzaSyAbdj31UUjRd0SAA506FpVqMZuwyVwpCQ0"
             style="width: 100%; height: 300px;" :center="props.data.location" :zoom="15" :fullscreen-control="false">
             <Marker :options="{ position: props.data.location }" />
         </GoogleMap>
@@ -33,7 +33,7 @@
         ></v-img>
     </v-card-text>
     <v-card-actions>
-        <v-btn class="mx-auto" to="/">TOPに戻る</v-btn>
+        <v-btn class="mx-auto" to="/">Back to top</v-btn>
     </v-card-actions>
   </v-card>
   </v-dialog>
@@ -72,4 +72,3 @@ watch(dialog, (val : boolean) => {
 })
 
 </script>
-  

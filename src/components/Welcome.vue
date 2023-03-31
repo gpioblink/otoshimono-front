@@ -5,16 +5,15 @@
             <v-col cols="auto">
                 <v-card border density="comfortable">
                     <v-card-title class="ma-4">
-                        ようこそ
+                      Welcome!
                     </v-card-title>
                     <v-card-text>
-                       「おとしものアプリ(仮)」は、警察に届けるまでもない落とし物を、
-                        撮影するだけで世界の人に共有できるツールです。
+                       The "Otoshimono App" is a tool that allows users to share their low-value lost and found items, such as umbrellas and gloves, with people all over the world by taking a picture of them.
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn class="mx-auto" to="/add">拾ったものを登録</v-btn>
-                        <v-btn class="mx-auto" to="/find">落とし物を探す</v-btn>
-                    
+                        <v-btn class="mx-auto" to="/add">Register what you find</v-btn>
+                        <v-btn class="mx-auto" to="/find">Look for lost items</v-btn>
+
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -22,8 +21,6 @@
       </v-responsive>
     </v-container>
   </template>
-  
+
   <script lang="ts" setup>
-    //
   </script>
-  

@@ -7,7 +7,7 @@
   >
     <v-card class="pt-5">
       <v-card-title>
-        この画像で登録しますか？
+        Would you like to register with this image?
       </v-card-title>
       <v-card-item>
         <v-img
@@ -19,14 +19,14 @@
         class="mx-auto"
       ></v-img>
       </v-card-item>
-      
+
       <v-card-actions>
         <v-row>
           <v-col>
-            <v-btn color="primary" block @click="closeDialog">再撮影</v-btn>
+            <v-btn color="primary" block @click="closeDialog">reshoot</v-btn>
           </v-col>
           <v-col>
-            <v-btn @click="upload" :loading="uploadLoading" color="primary" variant="outlined" block>登録</v-btn>
+            <v-btn @click="upload" :loading="uploadLoading" color="primary" variant="outlined" block>register</v-btn>
           </v-col>
       </v-row>
       </v-card-actions>
@@ -75,7 +75,7 @@ const upload = async () => {
     body: formData,
       mode: "cors",
   }).catch((e) => {
-      alert("通信エラーが発生しました。");
+      alert("A communication error has occurred.");
       console.log(e);
   });
   const data = await response?.json();
@@ -100,4 +100,3 @@ const closeDialog = () => {
 }
 
 </script>
-  

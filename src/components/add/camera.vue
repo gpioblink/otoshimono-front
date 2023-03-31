@@ -49,8 +49,8 @@ const alert = reactive(<Alert>{
 });
 
 onMounted(() => {
-    alert.title = "カメラを起動しています...";
-    alert.text = "落とし物の画像を撮影するためにカメラを起動します。カメラのアクセスを許可してください。";
+    alert.title = "Starting camera...";
+    alert.text = "Launch the camera to take an image of the lost item. Please allow camera access.";
     alert.type = "info";
 });
 
@@ -123,4 +123,3 @@ const snapshot = async () => {
   btnDisabled.value = false;
 }
 </script>
-  
