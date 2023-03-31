@@ -8,7 +8,7 @@
         ref="textBox"
         style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 70%;"
         variant="solo"
-        label="フィルターを入力"
+        label="Enter Filter"
         v-model="filterQuery"
         append-inner-icon="mdi-magnify"
         single-line
@@ -24,7 +24,7 @@
       temporary
       :style="`height: 40%; min-height: 400px; max-height: 600px; max-width: 600px; left: ${drawerLeft};`"
     >
-    
+
     <v-card height="100%" class="card-outter" style="position: relative">
       <v-card-title>{{ itemDetail.title }}
         <div class="text-caption">{{itemDetail.note}}</div>
@@ -40,7 +40,7 @@
         </div>
       </v-card-title>
       <v-card-item>
-        <div>    
+        <div>
           <v-img
             height="200"
             :src="itemDetail.pic"
@@ -52,10 +52,10 @@
 
       <v-card-actions class="card-actions">
         <v-btn color="primary" @click="dialog = true">
-          自分の落とし物です！
+          It's my lost item!
         </v-btn>
         <v-btn variant="text" @click="drawer = false">
-          キャンセル
+          Cancel
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -69,7 +69,7 @@
       style="max-width: 1000px;"
     >
       <v-card>
-        <v-card-title>最終確認</v-card-title>
+        <v-card-title>Final confirmation</v-card-title>
         <v-divider></v-divider>
         <v-card-text>
         <span>{{ itemDetail.title }}</span>
@@ -99,14 +99,14 @@
             variant="text"
             @click="dialog = false"
           >
-            キャンセル
+          Cancel
           </v-btn>
           <v-btn
             color="blue-darken-1"
             variant="text"
             :to="`/done/pickup/${itemDetail.id}`"
           >
-            発見済みにする
+          Mark as discovered
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -143,7 +143,7 @@ interface OtoshimonoMarker {
   note: string
   pic: string
   location: { lat: number, lng: number }
-  date: string 
+  date: string
   marker: google.maps.Marker
 }
 
@@ -166,7 +166,7 @@ const itemDetail = ref({id: "", title: "", tags: ["ああああ", "いいいい"
 const backendBaseURL = import.meta.env.VITE_OTOSHIMONO_BACKEND_BASE_URL
 
 // const currentLocationMarker: google.maps.Marker | null = null
-const resultMarkers: { [id :string]: OtoshimonoMarker } = {} 
+const resultMarkers: { [id :string]: OtoshimonoMarker } = {}
 
 const windowSizeChanged = () => {
   console.log(`windowWidth: ${window.innerWidth}`);
@@ -305,7 +305,7 @@ const zoomChanged = () => {
 
   // FIXME: 検索窓のフォーカス外し用
   unforcus()
-  
+
   // console.log('Map: Zoom:', gmap?.getZoom());
   showCurrentLocationMarkers()
 }
@@ -360,4 +360,3 @@ const markerClicked = (id: string) => {
 }
 
 </script>
-  

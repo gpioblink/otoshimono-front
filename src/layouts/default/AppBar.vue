@@ -1,6 +1,6 @@
 <template>
     <v-toolbar color="transparent" class="px-0">
-      <v-toolbar-title>おとしものアプリ(仮)</v-toolbar-title>
+      <v-toolbar-title>Otoshimono App</v-toolbar-title>
 
       <template v-slot:extension>
         <v-tabs
@@ -10,20 +10,19 @@
           <v-tab
             to="/add"
           >
-            拾ったものを登録
+          Register
           </v-tab>
 
           <v-tab
             to="/find"
           >
-            落とし物を探す
+          Find
           </v-tab>
         </v-tabs>
       </template>
     </v-toolbar>
   </template>
-  
+
   <script lang="ts" setup>
     import { ref } from "vue";
   </script>
-  
