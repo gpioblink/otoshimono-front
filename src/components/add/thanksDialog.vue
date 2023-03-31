@@ -10,7 +10,6 @@
     <v-card-text>
         <p>You registered a lost item.</p>
         <div class="text-caption">{{props.data.note}}</div>
-        <div>
         <v-chip
             v-for="(tag, i) in props.data.tags" :key="i"
             class="ma-1"
