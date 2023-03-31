@@ -6,7 +6,33 @@
 
   <v-text-field
         ref="textBox"
-        style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 70%;"
+        style="top:125px; left: 10px; position: absolute; max-width: 600px; width: 50%;"
+        variant="solo"
+        label="Search Google Maps"
+        v-model="jumpTo"
+        append-inner-icon="mdi-magnify"
+        single-line
+        hide-details
+        @click:append-inner="jumpSearch"
+        @keyup.enter="jumpSearch"
+        @blur="jumpSearch"
+  >
+  </v-text-field>
+  <v-list
+      v-if="jumpTo || jumpSearchResults.length > 0"
+      style="top:180px; left: 10px; position: absolute; max-width: 600px; width: 50%;"
+      density="compact"
+  >
+    <v-list-item
+      v-for="item in jumpSearchResults"
+      :key="item.name"
+      :title="item.name"
+      @click="jump(item.geometry)"
+    ></v-list-item>
+  </v-list>
+  <v-text-field
+        ref="textBox"
+        style="top:125px; right: 10px; position: absolute; max-width: 600px; width: 30%;"
         variant="solo"
         label="Enter Filter"
         v-model="filterQuery"
@@ -166,6 +192,8 @@ const drawer = ref(false)
 const showMapTypeControl = ref(false)
 
 const filterQuery = ref("")
+const jumpTo = ref("")
+const jumpSearchResults = ref<google.maps.places.PlaceResult[]>([])
 
 const itemDetail = ref<ResultMarker>({
   id: "",
@@ -344,6 +372,37 @@ const unforcus = () => {
     textBox.value.blur()
   }
 }
+
+const jumpSearch = () => {
+  const request = {
+    query: jumpTo.value,
+    fields: ['name', 'geometry'],
+    language: 'en',
+  };
+
+  const service = new google.maps.places.PlacesService(mapRef.value?.map!);
+
+  service.findPlaceFromQuery(request, function(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      jumpSearchResults.value = results
+      console.log(results)
+    }
+  });
+}
+const jump = (geometry: google.maps.places.PlaceResult["geometry"]) => {
+  if(!geometry?.location) return
+  const gmap = mapRef.value?.map
+  //const position = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude)
+  gmap?.setCenter(geometry.location)
+  jumpSearchResults.value = []
+  jumpTo.value = ""
+}
+
+watch(() => jumpTo.value, (query) => {
+  if (!query) {
+    jumpSearchResults.value = []
+  }
+})
 
 const centerChanged = () => {
   // TODO: 変更後の範囲に応じてマーカーを取得
